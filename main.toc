@@ -9,14 +9,14 @@
 \contentsline {section}{\numberline {2.1}Combination of {XcalableMP} and {OpenACC}}{5}{section.2.1}
 \contentsline {subsection}{\numberline {2.1.1}{OpenACC} Directives on Data}{5}{subsection.2.1.1}
 \contentsline {subsection}{\numberline {2.1.2}{OpenACC} Loop Construct}{6}{subsection.2.1.2}
-\contentsline {section}{\numberline {2.2}Communication on Accelerated Clusters}{7}{section.2.2}
-\contentsline {subsection}{\numberline {2.2.1}{XcalableACC} Directives}{7}{subsection.2.2.1}
+\contentsline {section}{\numberline {2.2}Communication on Accelerated Clusters}{6}{section.2.2}
+\contentsline {subsection}{\numberline {2.2.1}{XcalableACC} Directives}{6}{subsection.2.2.1}
 \contentsline {subsubsection}{\numberline {2.2.1.1}reflect Construct}{7}{subsubsection.2.2.1.1}
-\contentsline {subsubsection}{\numberline {2.2.1.2}gmove Construct}{8}{subsubsection.2.2.1.2}
-\contentsline {subsubsection}{\numberline {2.2.1.3}barrier Construct}{9}{subsubsection.2.2.1.3}
+\contentsline {subsubsection}{\numberline {2.2.1.2}gmove Construct}{7}{subsubsection.2.2.1.2}
+\contentsline {subsubsection}{\numberline {2.2.1.3}barrier Construct}{8}{subsubsection.2.2.1.3}
 \contentsline {subsubsection}{\numberline {2.2.1.4}reduction Construct}{9}{subsubsection.2.2.1.4}
 \contentsline {subsubsection}{\numberline {2.2.1.5}bcast Construct}{11}{subsubsection.2.2.1.5}
 \contentsline {subsubsection}{\numberline {2.2.1.6}wait\_async Construct}{12}{subsubsection.2.2.1.6}
 \contentsline {subsection}{\numberline {2.2.2}Coarray Features}{12}{subsection.2.2.2}
 \contentsline {chapter}{\numberline {3}{OpenACC} Extension}{15}{chapter.3}
-\contentsline {chapter}{Bibliography}{18}{chapter*.42}
+\contentsline {chapter}{Bibliography}{18}{chapter*.43}
