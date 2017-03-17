@@ -10,17 +10,16 @@ using {\XACC} directives or {\tt coarray} features.
 \section{Combination of {\XMP} and {\OACC}}
 \subsection{{\OACC} Directives on Data}
 \subsubsection*{Description}
-When {\tt distributed arrays} are appeared in {\OACC} constructs,
+When {\tt distributed arrays} appear in {\OACC} constructs,
 global indices in {\tt distributed arrays} are used.
 %Thus,
 %an {\XACC} compiler automatically translates the global indices in the {\OACC} constructs to the appropriate local indices.
-{\tt Distributed arrays} may be appeared in the {\OACC} {\bf update}, {\bf enter data}, {\bf exit data}, 
-{\bf host\_data}, {\bf cache}, and {\bf declare} directives.
-Moreover, 
-they may be appeared in the {\bf data} clause accompanied by some of 
+The {\tt distributed arrays} may appear in the {\OACC} {\bf update}, {\bf enter data}, {\bf exit data}, 
+{\bf host\_data}, {\bf cache}, and {\bf declare} directives,
+and the {\bf data} clause accompanied by some of 
 {\bf deviceptr}, {\bf present}, {\bf copy}, {\bf copyin}, 
 {\bf copyout}, {\bf create}, and {\bf delete} clauses.
-Data transfer of {\tt distributed array} by {\OACC} is performed on only {\tt nodes} which have elements specified by global indices.
+Data transfer of {\tt distributed array} by {\OACC} is performed on only {\tt nodes} which have elements specified by the global indices.
 
 \subsubsection*{Example}
 \begin{myfigure}
@@ -57,7 +56,7 @@ int a[N], b[N];
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Example of a code in {\XMP} extension with {\OACC} data clause}\label{code:ex-oacc-data}
+\caption{Code example in {\XMP} extension with {\OACC} {\bf enter\_data} directive}\label{code:ex-oacc-data}
 \end{myfigure}
 
 In lines 2-6,
@@ -132,7 +131,7 @@ int a[N], b[N], sum = 0;
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Example of a code in {\XMP} extension with {\OACC} loop construct}\label{code:ex-oacc-loop}
+\caption{Code example in {\XMP} extension with {\OACC} loop construct}\label{code:ex-oacc-loop}
 \end{myfigure}
 
 In lines 2-6,
@@ -154,7 +153,7 @@ the total value of the local variable {\it sum} stored on each accelerator memor
 {\XACC} directives are extensions of {\XMP} {\bf reflect}, {\bf gmove}, 
 {\bf barrier}, {\bf reduction}, {\bf bcast}, and {\bf wait\_async} directives in {\XMP} global-view memory model.
 When adding an {\bf acc} clause to the above {\XMP} directives,
-data stored on accelerator memory are transferred shown in Fig. \ref{fig:concept}.
+data stored on accelerator memory are transferred.
 Note that while XcalableACC {\bf gmove} directive described in Section \ref{sec:reflect} 
 and {\tt coarray} features described in Section \ref{sec:coarray} can occur communication both among accelerator memories and between accelerator memory and host memory on different {\tt nodes},
 other directives can occur communication only among accelerator memories.
@@ -199,8 +198,11 @@ array specified by {\it array-name} on accelerator memory with the value of its 
 reflection source.
 
 \subsubsection*{Restriction}
-When the {\bf acc} clause is specified,
-the arrays specified by the sequence of {\it array-name}'s must be allocated on accelerator memory.
+\begin{itemize}
+ \item When the {\bf acc} clause is specified,
+   the arrays specified by the sequence of {\it array-name}'s must be allocated on accelerator memory.
+ \item This construct must not appear in {\OACC} {\tt parallel region}.
+\end{itemize}
 
 \subsubsection*{Example}
 \begin{myfigure}
@@ -235,7 +237,7 @@ int a[N];
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Example of a code in {\XACC} {\bf reflect} construct}\label{code:reflect}
+\caption{Code example in {\XACC} {\bf reflect} construct}\label{code:reflect}
 \end{myfigure}
 
 In lines 2-5,
@@ -271,7 +273,10 @@ and the unspecified variable on host memory is targeted.
 \end{itemize}
 
 \subsubsection*{Restriction}
-The variables targeted on accelerator memory must be allocated on accelerator memory.
+\begin{itemize}
+ \item The variables targeted on accelerator memory must be allocated on accelerator memory.
+ \item This construct must not appear in {\OACC} {\tt parallel region}.
+\end{itemize}
 
 \subsubsection*{Example}
 \begin{myfigure}
@@ -314,7 +319,7 @@ int a[N], b[N];
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Example of a code in {\XACC} {\bf gmove} construct}\label{code:gmove}
+\caption{Code example in {\XACC} {\bf gmove} construct}\label{code:gmove}
 \end{myfigure}
 
 In lines 2-6,
@@ -344,7 +349,7 @@ at the point at which the construct appears.
 \subsubsection*{Description}
 \begin{itemize}
  \item When the {\bf acc} clause is specified,
-the barrier construct blocks until all outgoing asynchronous operations on all accelerators are completed.
+the barrier construct blocks until all outgoing asynchronous operations on accelerators are completed.
  \item When the {\bf acc} clause is not specified,
 the barrier construct does not guarantee that an outgoing asynchronous operation on accelerator is completed.
 \end{itemize}
@@ -370,7 +375,7 @@ the barrier construct does not guarantee that an outgoing asynchronous operation
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Example of a code in {\XACC} {\bf barrier} construct}\label{code:barrier}
+\caption{Code example in {\XACC} {\bf barrier} construct}\label{code:barrier}
 \end{myfigure}
 
 In line 1,
@@ -446,8 +451,11 @@ local variables among the accelerators and
 sets the reduction results to the variables on each of the accelerators.
 
 \subsubsection*{Restriction}
-When the {\bf acc} clause is specified,
-the variables specified by the sequence of {\it variable}'s must be allocated on accelerator memory.
+\begin{itemize}
+ \item When the {\bf acc} clause is specified,
+   the variables specified by the sequence of {\it variable}'s must be allocated on accelerator memory.
+ \item This construct must not appear in {\OACC} {\tt parallel region}.
+\end{itemize}
 
 \subsubsection*{Example}
 \begin{myfigure}
@@ -474,7 +482,7 @@ int a;
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Example of a code in {\XACC} {\bf reduction} construct}\label{code:reduction}
+\caption{Code example in {\XACC} {\bf reduction} construct}\label{code:reduction}
 \end{myfigure}
 
 In line 2,
@@ -519,8 +527,11 @@ by the {\tt on} clause. After executing this construct,
 the values of the {\tt broadcast variables} become the same as those in the {\tt source node}.
 
 \subsubsection*{Restriction}
-When the {\bf acc} clause is specified,
-the variables specified by the sequence of {\it variable}'s must be allocated on accelerator memory.
+\begin{itemize}
+ \item When the {\bf acc} clause is specified,
+   the variables specified by the sequence of {\it variable}'s must be allocated on accelerator memory.
+ \item This construct must not appear in {\OACC} {\tt parallel region}.
+\end{itemize}
 
 \subsubsection*{Example}
 \begin{myfigure}
@@ -547,7 +558,7 @@ int a;
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Example of a code in {\XACC} {\bf bcast} construct}\label{code:bcast}
+\caption{Code example in {\XACC} {\bf bcast} construct}\label{code:bcast}
 \end{myfigure}
 
 In line 2,
@@ -580,7 +591,9 @@ statements following it are not executed until all of the asynchronous
 communications that are specified by {\it async-id}'s and issued on the accelerators in
 {\tt node set} specified by the {\tt on} clause are complete.
 
-%\subsubsection*{Restriction}
+\subsubsection*{Restriction}
+This construct must not appear in {\OACC} {\tt parallel region}.
+
 \subsubsection*{Example}
 \begin{myfigure}
 \begin{minipage}{0.45\hsize}
@@ -610,7 +623,7 @@ int a;
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Example of a code in {\XACC} {\bf wait\_async} construct}\label{code:waitasync}
+\caption{Code example in {\XACC} {\bf wait\_async} construct}\label{code:waitasync}
 \end{myfigure}
 
 In line 2,
@@ -618,8 +631,7 @@ In line 2,
 In line 4,
 {\OACC} {\bf enter data} directive transfers the local variable {\it a} from host memory to accelerator memory.
 In line 5,
-{\XACC} {\bf reduction} directive calculates a total value of the variable {\it a} stored on accelerator
-memory in all {\tt node} asynchronously.
+{\XACC} {\bf reduction} directive performs asynchronously.
 In line 7,
 {\XACC} {\bf wait\_async} construct blocks until the asynchronous {\bf reduction} operation at line 5 is complete.
 
@@ -635,9 +647,12 @@ communication targets data on the accelerator side.
 {\tt Coarray} operations on accelerators are synchronized using the same synchronization functions in {\XMP}.
 
 \subsubsection*{Restriction}
-Only {\OACC} {\bf declare} directive can declare a {\tt coarray} on accelerator memory.
-For example,
-{\OACC} {\bf enter data} and {\bf copy} directives cannot declare a {\tt coarray} on accelerator memory.
+\begin{itemize}
+ \item Only {\OACC} {\bf declare} directive can declare a {\tt coarray} on accelerator memory.
+   For example,
+   {\OACC} {\bf enter data} and {\bf copy} directives cannot declare a {\tt coarray} on accelerator memory.
+ \item The {\tt coarray} syntax must not appear in {\OACC} {\tt parallel region}.
+\end{itemize}
 
 \subsubsection*{Example}
 \begin{myfigure}
@@ -680,7 +695,7 @@ xmp_sync_all(NULL);
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Example of a code in {\XACC} coarray features}\label{code:coarray}
+\caption{Code example in {\XACC} coarray features}\label{code:coarray}
 \end{myfigure}
 
 In line 3,

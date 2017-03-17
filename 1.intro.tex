@@ -29,7 +29,7 @@ the accelerator memory may be physically and/or virtually separate from the host
 Thus,
 a host may not be able to read or write the accelerator memory directly.
 
-\section{Overview of {\XACC}}
+\section{Programming Model}
 {\XACC} is a directive-based language extension based on Fortran 90 and ISO C90 (ANSI C90).
 To develop applications on accelerated clusters with ease,
 {\XACC} extends {\XMP} and {\OACC} independently as follow:
@@ -49,15 +49,15 @@ Fig. \ref{fig:concept} shows a concept of the {\XMP} extension.
 {\XMP} directives define a {\tt template} and a {\tt node set}.
 The {\tt template} represents a global index space, which is distributed onto the {\tt node set}.
 Moreover, {\XMP} directives declare {\tt distributed arrays},
-parallelize loop statements and transfer data among host memories according to the {\tt template}.
+parallelize loop statements and transfer data among host memories according to the distributed {\tt template}.
 {\OACC} directives transfer the {\tt distributed arrays} between host memory and accelerator memory on the same {\tt node}
-and calculate the loop statements parallelized by {\XMP} on accelerators.
+and execute the loop statements parallelized by {\XMP} on accelerators in parallel.
 {\XACC} directives, which are {\XMP} communication directives with an {\bf acc} clause, 
 transfer data among accelerator memories and between accelerator memory and host memory on different {\tt nodes}.
 Moreover, 
-{\tt coarray} features also transfer data among them.
+{\tt coarray} features also transfer data on different nodes.
 
-The {\XMP} extension is defined to develop parallel applications with keeping the sequential code image.
+%The {\XMP} extension is defined to develop parallel applications with keeping the sequential code image.
 Note that 
 the {\XMP} extension is not a simple combination of {\XMP} and {\OACC}.
 For example, 
@@ -65,12 +65,14 @@ if you represent communication of {\tt distributed array} among accelerators sho
 you need to specify explicitly communication between host and accelerator by {\OACC} and that between hosts by {\XMP}.
 Moreover,
 you need to calculate manually global indices of the {\tt distributed array} owned by each {\tt node}.
+By contrast,
+{\XACC} directives can represent such communication among accelerators directly.
 
-\subsection{{\OACC} Extensions}
+\subsection{{\OACC} Extension}
 
 \section{Execution Model}
 The execution model of {\XACC} is a combination of those of {\XMP} and {\OACC}.
-While the execution model of a host CPU programming on {\XACC} is based on that of {\XMP},
+While the execution model of a host CPU programming is based on that of {\XMP},
 that of an accelerator programming is based on that of {\OACC}.
 %For details, refer to each specification\cite{xmp,openacc}.
 
@@ -79,7 +81,7 @@ where each {\tt node} starts execution from the same main routine and keeps exec
 which is referred to as the replicated execution
 until it encounters an {\XMP} construct or an {\XMP} extension construct.
 In particular,
-the {\XMP} extension construct may allocate, deallocate, or transfer {\tt distributed array} on accelerators.
+the {\XMP} extension construct may allocate, deallocate, or transfer data on accelerators.
 An {\OACC} construct or an {\OACC} extension construct may define {\tt parallel regions}, such as work-sharing loops, 
 and offloads it to accelerators under control of the host.
 
