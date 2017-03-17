@@ -32,10 +32,11 @@ a host may not be able to read or write the accelerator memory directly.
 \section{Programming Model}
 {\XACC} is a directive-based language extension based on Fortran 90 and ISO C90 (ANSI C90).
 To develop applications on accelerated clusters with ease,
-{\XACC} extends {\XMP} and {\OACC} independently as follow:
-(1) {\XMP} extension is to facilitate cooperation between existing {\XMP} and {\OACC} directives.
-(2) {\OACC} extension is to deal with multiple accelerators.
+{\XACC} extends {\OACC} and {\XACC} independently as follow:
+(1) {\OACC} extension is to deal with multiple accelerators.
+(2) {\XMP} extension is to facilitate cooperation between {\XMP} and {\OACC} directives.
 
+\subsection{{\OACC} Extension}
 \subsection{{\XMP} Extension}
 In a program using the {\XMP} extension,
 {\XMP}, {\OACC}, and {\XACC} directives are used.
@@ -68,8 +69,6 @@ you need to calculate manually global indices of the {\tt distributed array} own
 By contrast,
 {\XACC} directives can represent such communication among accelerators directly.
 
-\subsection{{\OACC} Extension}
-
 \section{Execution Model}
 The execution model of {\XACC} is a combination of those of {\XMP} and {\OACC}.
 While the execution model of a host CPU programming is based on that of {\XMP},
@@ -89,6 +88,6 @@ and offloads it to accelerators under control of the host.
 The remainder of this document is structured as follows:
 
 \begin{itemize}
- \item Chapter 2: {\XMP} Extension
- \item Chapter 3: {\OACC} Extension
+ \item Chapter 2: {\OACC} Extension
+ \item Chapter 3: {\XMP} Extension
 \end{itemize}
