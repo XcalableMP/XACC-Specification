@@ -1,0 +1,267 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	program.sty Version 1.2 by Yutaka Ishikawa @ ETL & RWCP
+%				   yisikawa@etl.go.jp & ishikawa@rwcp.or.jp
+% 		including program texts.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% HISTORY
+%	1991.08.17 Created by Yutaka Ishikawa @ Electrotechnical Laboratory.
+%			      yisikawa@etl.go.jp
+%	1993.07.20 Modified by
+%			 Yutaka Ishikawa @ Real World Computing Partership
+%		   Advised by Hiroki Konaka @ Real World Computing Partership
+%
+%	1994.04.02 Modified by
+%			 Yutaka Ishikawa @ Real World Computing Partership
+%		   \lineskiplimit=-\maxdimen
+%		   program is surrounded by vbox.
+%		   \pagehandler was programmed but not used.
+%	1995.03.06 Modified by
+%			 Yutaka Ishikawa @ Real World Computing Partership
+%		   the ref command is added
+%
+% The features of this style file are:
+%	1) adjusting the tab position,
+%	2) the line number is automatically inserted,
+%	3) label can be added. you can set up the starting character of
+%          a special command. For example, if you want to choose
+%	   the ` character, then \progspecial{`} command is used as follows:
+%		\begin{program*}{\progspecial{`}}
+%		\end{program*}
+%	   you can write `label{ref-abc} in the program text.
+%	   If you want to print out ` character itself, use `@.
+%
+%	4) if \nolineno is declared, the line number is omitted.
+%	5) an example of printing math characters is as follows:
+%		\begin{program*}{\progspecial{|}}
+%			|( |leftarrow |rightarrow |)
+%			|@ <--- if you want to printout the font itself.
+%		\end{program*}
+%
+% Examples:
+%	\begin{program}
+%		program text
+%	\end{program}
+%
+%	\begin{program*}{\normalsize}
+%		program text
+%	\end{program*}
+%	\begin{program*}{\proglineno=10\progspecial{`}}
+%		program text `label{abc}
+%	\end{program*}
+%
+%	\begin{program*}{\nolineno}
+%		program text
+%	\end{program*}
+%
+%	\listprogram{file name}
+%	\nlistprogram{\small}{file name}
+%	\nlistprogram{\proglineno=10\small}{file name}
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Variable declarations
+\newcount\proglineno
+\newcount\progfirst
+\newcount\proglineflag
+\newcount\progneedref
+\newdimen\tabwidth
+\newdimen\proglinelength
+\newdimen\refpos
+\newdimen\progdimen
+\refpos=14cm
+\proglinelength=0pt
+\newdimen\temptotal
+
+%
+%
+\def\dlendgroup{\vspace{0.2cm}\hrule\vspace{0.05cm}\hrule\endgroup\egroup\@@par}
+%
+%
+\def\nolineno{\global\proglineflag=1}
+%
+\def\lineref{\global\progneedref=1}
+%
+\def\@programspecials{\def\do##1{\catcode`##1=12}\dospecials}
+%
+\def\@programstartbox{\setbox0=\hbox\bgroup}
+%
+% space and tab are active characters inside the program environment.
+% In order to define the space and tab macros, those characters are
+% temporarily changed to active and define those macros.
+%
+% The space macro just puts the space character.
+% In the tab macro, after enclosing box0, it calculate the next tab
+% position and the box0 is enlarged to that position.
+%
+{\catcode`\ =\active
+\catcode`\^^I=\active
+\gdef {\ }
+\gdef^^I{\leavevmode\egroup
+\dimen0=\wd0% the width so far, or since the previous tab
+\divide\dimen0by\tabwidth%
+\multiply\dimen0by\tabwidth% compute previous multiple of \tabwidth
+\advance\dimen0by\tabwidth% advance to next multiple of \tabwidth
+\wd0=\dimen0%
+\advance\proglinelength%
+by\wd0%
+\box0%
+\@programstartbox}}
+
+%
+% @programbody#1\end{program} and @sprogrambody#1\end{program} are defined.
+% Since we want to use characters \, {, and } to declare those macros,
+% those character's category codes are changed.
+%
+\begingroup \catcode `|=0 \catcode `[= 1
+\catcode`]=2\catcode`\{=12\catcode`\}=12\catcode`\\=12
+|gdef|@programbody#1\end{program}[|@programstartbox#1|end[program]]
+|gdef|@sprogrambody#1\end{program*}[|@programstartbox#1|end[program*]]
+|gdef|@protobody#1\end{prototype}[|@programstartbox#1|end[prototype]]
+|gdef|@programref{#1}[|@ifundefined[r@#1][[|reset@font|bf ??]|@warning
+   [Reference `#1' on page |thepage |space
+    undefined]][|edef|@tempa[|@nameuse[r@#1]]|expandafter
+    |@car|@tempa |@nil|null]]
+|gdef|@programlabel{#1}[|@bsphack|if@filesw[|let|thepage|relax
+|def|protect[|noexpand|noexpand|noexpand]%
+|xdef|@gtempa[|write|@auxout[|string|newlabel{#1}{{|the|proglineno}{0}}]]]|@gtempa
+|if@nobreak|ifvmode|nobreak|fi|fi|fi|@esphack]
+|endgroup
+
+%
+% @setupprogram macro setups the environment.
+%	The tabwidth variable is calculated based on the current font set.
+%	The par macro which will be invoked every end of line
+%	is defined to close the box0 and show it.
+%	The verypar macro which will be invoked at the every vertical mode
+%	is defined so that printout the line no.
+%	After all character codes are changed to catcode 12 by the
+%	@programspecials macro, characters space and tab are changed to active
+%
+\def\@setupprogram{\setbox0=\hbox{\ }% calculate tab width
+\tabwidth=8\wd0 % tab width
+\progfirst=0
+\progneedref=0
+\ifnum\proglineflag=1\proglineno=1\fi
+%
+%
+\let\oldpar=\par
+\let\oldeverypar=\everypar
+\def\pagehandle{%
+\temptotal=\pagetotal\advance\temptotal by2\baselineskip%
+\ifdim\temptotal>\pagegoal%
+%\relax\message{BASELINESKIP = \the\baselineskip}%
+%\relax\message{TEMPTOTAL = \the\temptotal}%
+\relax\message{LINENO = \the\proglineno}%
+\relax\message{PAGETOTAL = \the\pagetotal}%
+\relax\message{PAGEGOAL = \the\pagegoal}%
+\relax\ifnum\proglineno=0\lineskiplimit=0pt\else%
+\relax\relax\lineskiplimit=0pt%
+\relax\relax\let\savedpar=\par%
+\relax\relax\let\savedeverypar=\everypar%
+\relax\relax\let\par=\oldpar%
+\relax\relax\let\everypar=\oldeverypar%
+\relax\relax\eject%
+\relax\relax\let\par=\savedpar%
+\relax\relax\let\everypar=\savedeverypar%
+\relax\relax\lineskiplimit=-\maxdimen%
+\relax\fi%
+\fi%
+}
+%
+%
+\def\par{\leavevmode\egroup\advance\proglinelength by\wd0%
+\ifnum\progfirst=0\progfirst=1\proglinelength=\wd0\medskip\else%
+\relax\ifnum\progneedref=1%
+\relax\relax\box0%
+\relax\relax\ifdim\proglinelength<\refpos%
+\relax\relax\relax\progdimen=-\proglinelength%
+\relax\relax\relax\advance\progdimen by \refpos\hbox to\progdimen{\hfill}%
+\relax\relax\fi%
+\relax\relax(\the\proglineno)%
+\relax\relax\advance\proglineno by 1%
+\relax\relax\progneedref=0%
+\relax\else%
+\relax\relax\box0%
+\relax\fi%
+\fi%
+%%%%\pagehandle%
+\endgraf%
+}%
+%
+\def\label{\@programlabel}
+\def\ref{\@programref}
+%
+\everypar{\proglinelength=0pt%
+%%\message{\the\parindent}%
+%%\ifnum\proglineflag=1\hbox to\parindent{\hfill}\else%
+\ifnum\proglineflag=1\else%
+\relax\advance\proglineno by 1\hbox to\parindent{\hfill}%
+\relax\hbox to2em{\hfill\the\proglineno\ }\fi%
+\@programstartbox}%
+%
+\obeylines \@programspecials \obeyspaces
+\catcode`\ =\active \catcode`\^^I=\active}
+
+%
+%
+% The dinition of
+%	\begin{program}
+%	\end{program}
+%
+\def\program{\par\vbox\bgroup\tt\proglineflag=0\proglineno=0\@setupprogram\begingroup%
+\lineskiplimit=-\maxdimen%
+\lineskip=0pt%
+\parskip=0pt%
+\@programbody}
+\let\endprogram=\endgroup
+%\let\endprogram=\dlendgroup
+
+%
+% The definition of
+%	\begin{program*}{any latex commands}
+%	\end{program*}
+%
+\@namedef{program*}#1{\par\vbox\bgroup\tt\proglineflag=0\proglineno=0#1\@setupprogram\begingroup\hrule\vspace{0.05cm}\hrule%
+\lineskiplimit=-\maxdimen%
+\lineskip=0pt%
+\parskip=0pt%
+\@sprogrambody}
+\expandafter\let\csname endprogram*\endcsname =\dlendgroup
+%\expandafter\let\csname endprogram*\endcsname =\endgroup
+
+%
+% The definition of BY ATSUSHI HORI
+%	\begin{prototype}{any latex commands}
+%	\end{prototype}
+%
+\def\slendgroup{\vspace*{0.15cm}\hrule\vspace*{0.3cm}\endgroup\egroup\@@par}
+
+\def\prototype{\par\leftmargin=0cm\vbox\bgroup\tt\proglineflag=1\@setupprogram\begingroup\vspace*{0.3cm}\hrule%
+\lineskiplimit=-\maxdimen%
+\lineskip=0pt%
+\parskip=0pt%
+\@protobody}
+\let\endprototype=\slendgroup
+%%\expandafter\let\csname endprototype\endcsname =\slendgroup
+
+%
+% The defintion of
+%	\listprogram{filename}
+%
+\def\listprogram#1{\begingroup\proglineno=0
+\tt\@setupprogram\@programstartbox\par\input#1 \endgroup}
+%
+\def\nlistprogram#1#2{\begingroup\proglineno=0#1
+\tt\@setupprogram\@programstartbox\par\input#2 \endgroup}
+
+%
+% misc
+%
+%\def\progspecial#1{\catcode`#1=0}
+\def\progspecial#1{\let\@=#1\catcode`#1=0}
+%
+% for the compatibility of the previous version.
+\def\linelabel#1{\let\@=#1\catcode`#1=0}
+%
+%
+%

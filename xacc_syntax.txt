@@ -1,0 +1,210 @@
+XcalableACC 仕様の概要                                   (2014/10/09)
+
+
+更新履歴
+
+ 01 (2014/09/07)
+     - XACC 指示文を削除 (∵ XMP と OpanACC で wait 指示文が全く異なる
+                            意味で使用されている)
+     - on_device 節を付加できる指示文として、update と wait を追加。
+     - xmp barrier 指示文と acc barrier_device 指示文の記述を追加。
+
+ 02 (2014/10/09)
+     - サンプルコードを修正。
+     - 概論の記述を拡充。
+     - プレフィクス xacc を導入。
+     - acc 節の記述に追加。
+     - xmp barrier 指示文と acc barrier_device 指示文の記述を修正。
+
+
+--------------------------------------------------------------------
+○ サンブルコード
+
+void foo(){
+
+#pragma xmp nodes p(4)
+#pragma acc device d(*)
+
+#pragma xmp template t(0:99)
+#pragma xmp distribute t(block) onto p
+
+  float a[100][100];
+#pragma xmp align a[i][*] with t(i)
+#pragma xmp shadow a[1:1][0]
+#pragma acc declare copy(a) layout([*][block]) shadow([0][1:1]) on_device(d) 
+
+  ...
+
+#pragma xacc reflect (a) acc
+
+#pragma xmp loop (i) on t(i)
+  for (int i = 0; i < 100; i++){
+#pragma acc parallel loop layout(a[*][j+1]) vector_length(5) on_device(d) async(1)
+    for (int j = 0; j < 99; j++){
+      a[i][j+1] = 1;
+    }
+  }
+
+#pragma xacc barrier acc
+
+}
+
+
+--------------------------------------------------------------------
+○ 概論
+
+XACC 拡張は「デバイス間直接通信」と「マルチデバイス制御(階層的並列処理)」
+を記述することを目的とする。XMP 指示文の acc 節が前者に、OpenACC に対
+する各拡張が後者に当たる。
+
+o 指示文
+
+XACC では2種類の指示文が存在する。
+
+ (a) (拡張された) XMP 指示文 → プレフィクス xmp または xacc
+ (b) (拡張された) OpenACC 指示文 → プレフィクス acc
+
+主に、(a) はノード間の分散メモリ並列処理およびデバイス間並列処理を、
+(b) はデバイス上の並列処理を記述することを、それぞれ目的とする。
+
+特に、(a) に属する実行指示文は、原則としてホストによって実行される(そ
+の結果として、必要に応じてホストがデバイスに通信を「オフロード」するか
+もしれない)。したがって、それらは compute region の内側には現れない。
+ただし、高性能および高生産性の観点から、いくつかの実行指示文については
+compute region の内側に置けるようにすることも検討する ※1
+
+要検討: 各所の acc と device というキーワードを統一すべき？
+
+o 処理系
+
+XcalableACC 処理系は、XACC, XMP, OpenACC の3つの動作モードをサポートす
+る。各動作モードは、それぞれ特定のプレフィクスを持つ指示文のみを解釈す
+る。
+
+              プレフィクス
+モード     xmp   acc   xacc
+ XACC       x     x     x
+ XMP        x           x
+ OpenACC          x     x
+
+すなわち、デバイス間の通信を指示する(acc 節を伴う) XMP 指示文のプレフィ
+クスを xacc としておくことにより、1ノード内で実行する場合(OpenACC モー
+ド)でも動作する可搬性のあるプログラムを記述できる。
+
+
+--------------------------------------------------------------------
+○ XMP 指示文
+
+- (非分散次元に対する shadow 指示は無視される。)
+- 当面、デバイス上のデータは coarray にできない(将来的には実現したい)。
+
+o acc 節
+
+ - reflect / bcast / reduction / wait_async / barrier
+ - (gmove)
+
+ - 当該グローバル通信指示文は、デバイス上のデータを対象にする。
+
+要検討: 特別な指定(e.g. acc_nowait 節)がある場合には、(可能であれば)ホ
+        ストはブロックしない？
+
+o barrier 指示文
+
+ - acc 節を伴う場合、全ノードの全デバイスにおいて発行済の全ての非同期
+   処理が完了するまでホストおよび各デバイスの処理をブロックする。
+
+要検討: 対象のデバイスを指定する機能(on_device 節)は必要か？
+
+ - acc 節を伴わない場合(通常のホスト間のバリア同期)、デバイス上の非同
+   期処理の完了は保証しない。
+
+
+--------------------------------------------------------------------
+○ OpenACC 指示文
+
+o device 指示文
+
+ - 「デバイス配列」を宣言する。
+ - 一次元のみ。1-origin。
+ - "=" 節なしで宣言した場合、暗黙に ACC の型と個数が決定される(実装依
+   存)。
+ - "=" 節には、処理系依存の predefined なデバイス配列を指定できる。
+
+例
+--------------------------------------
+#pragma acc device d(*) = nvidia(0:3)
+--------------------------------------
+
+o barrier_device 指示文
+
+ - 全デバイスにおいて発行済の全ての非同期処理が完了するまで、各デバイ
+   スの処理をブロックする。
+ - ホストの処理には影響しない。
+
+要検討: 特定の非同期処理の完了を待つ機能(async 節)は必要か？ 
+
+o layout 節
+
+ - declare
+ - loop / parallel loop / kernels loop
+
+ - 配列の次元およびループのイタレーションの、デバイス配列への分散方法
+   を指定する。
+ - 分散形式は block か * のみ。
+
+o shadow 節
+
+ - declare
+
+ - デバイス配列への分散に関するシャドウを指定する。
+ - (非分散次元("*")に対する shadow 指示は無視される。)
+ - xmp shadow と acc shadow が同一の次元に指定されている場合、両者の指
+   定は一致していなければならない ※2
+
+o on_device 節
+
+ - data / enter data / exit data / declare / update
+ - parallel / kernel / parallel loop / kernels loop / wait
+ - barrier_decice
+
+ - 対象のデバイス集合を指定する。
+ - 省略時解釈:
+  * declare 指示文で layout 節が指定されている場合 → デフォルトのデバイス配列
+  * data / enter data / exit data / update 指示文 → declare されていれ
+    ば、そのデバイス配列
+  * barrier_decice 指示文 → デフォルトのデバイス配列 
+  * それ以外の場合 → 通常の OpenACC のルールに基づく。
+
+o wait 指示文
+
+ - wait 指示文が、on_device 節を伴い、async 節を伴わない場合、全デバイ
+   スにおいて発行済の全ての非同期処理が完了するまでホストの処理はブロッ
+   クする。
+
+
+-----------------------------------------------------------------------------
+※1 ネストの順序
+
+以下のように書けるとよい。acc parallel → xmp loop → acc loop
+
+-------------------------------------------------
+#pragma acc parallel on_device(d)
+{
+#pragma xmp loop (i) on t(i)
+  for (int i = 0; i < 100; i++){
+#pragma acc loop layout(a[*][j+1]) vector_length(5)
+    for (int j = 0; j < 99; j++){
+      a[i][j+1] = 1;
+    }
+  }
+
+}
+-------------------------------------------------
+
+compute region の中に書きたい XMP 指示文
+
+- loop → 「並列化後のループ上下限を計算するランタイム呼び出し」→ 可能
+- (reflect_do) → ？
+- (bcast_do, reduction_do)?
+
+※2 XMP 指示文と ACC 指示文が直交しない例
