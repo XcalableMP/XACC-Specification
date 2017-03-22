@@ -41,69 +41,24 @@
 
 \def\openb{{\it [}}
 \def\closeb{{\it ]}}
-\def\DAG{$^\dagger$}
-\def\DDAG{$^\ddagger$}
 \def\XMP{XcalableMP}
 \def\XACC{XcalableACC}
-\def\OMP{OpenMP}
 \def\OACC{OpenACC}
-\def\HPF{HPF}
-\def\CAF{Co-array Fortran}
-\def\MPI{MPI}
-\def\Fort{Fortran}
-\def\C{C}
+\def\OMP{OpenMP}
 \def\XMPF{XcalableMP Fortran}
 \def\XMPC{XcalableMP C}
 \def\XACCF{XcalableACC Fortran}
 \def\XACCC{XcalableACC C}
-\def\Directive#1{{\tt #1}\index{#1@{\tt #1}}\index{Directive!#1@{\tt #1}}}
 \def\Syntax#1{\index{Syntax!#1@{\tt #1}}}
-\def\Term#1{{#1}\index{#1}}
 \def\Example#1{\index{Example!#1@{\tt #1}}}
-\def\Intrinsic#1{\index{#1@{\tt #1}}\index{Intrinsic and Library Procedures!#1@{\tt #1}}}
-\def\NULL{{\tt NULL}}
-\def\PROG#1{{\tt #1}\index{\tt #1}\index{Command!#1}}
-\def\FUNC#1{{\tt #1()}\index{\tt #1}\index{Example Function!#1}}
-\def\LPROG#1{{\tt #1}\index{\tt #1}\index{Linux Command!#1}}
-\def\LFUNC#1{{\tt #1()}\index{\tt #1}\index{Linux Function!#1}}
-\def\MFUNC#1{{\tt #1()}\index{\tt #1}\index{Myrinet/MX Function!#1}}
-\def\SFUNC#1{{\tt #1()}\index{\tt #1}\index{Sample Code!#1}}
-\def\STRUCT#1{{\tt #1}\index{\tt #1}\index{Struct!#1}}
-\def\VAR#1{{\tt #1}\index{\tt #1}\index{Variable!#1}}
-\def\ARG#1{{\tt #1}\index{\tt #1}\index{Variable!#1}}
-\def\MACRO#1{{\tt #1}\index{\tt #1}\index{Macro!#1}}
-\def\ERRNO#1{{\tt #1}\index{\tt #1}\index{ERRNO!#1}}
-\def\SIGNAL#1{{\tt #1}\index{\tt #1}\index{Signal!#1}}
-\def\FILE#1{{\tt #1}\index{\tt #1}\index{File!#1}}
-\def\ENV#1{{\tt #1}\index{\tt #1}\index{Environment Variable!#1}}
-\def\INDEX#1{#1\index{#1}}
-\def\OPTION#1{{\tt #1}\index{Command Option!#1}}
-\def\TERM#1{\underline{#1}\index{#1}}
-\def\CTRL#1{{\tt $^\wedge$#1}}
+%
 \def\phrule{\vspace{0.2cm}\hrule\vspace{0.05cm}\hrule}
 \def\qhrule{\vspace{0.2cm}\hrule}
 \def\dhrule{\hrule\vspace{0.05cm}\hrule}
 \def\bsquare{\rule[-2pt]{5pt}{10pt}}
-
-\newcommand\gio{{\tt global\_io }}
-\newcommand\mio{{\tt master\_io }}
-\newcommand{\mytextcolor}[2]{{#2}}
-\newcommand{\mycolor}[1]{\color{#1}}
-\newenvironment{parcolor}[1]{\par\color{#1}}{\par}
-\newenvironment{point}[1]{\vspace*{0.3cm}\begin{itembox}{#1}}{\end{itembox}\vspace*{0.3cm}}
-\newenvironment{note}[1]{\vspace*{0.3cm}\begin{itembox}{Note on #1}}{\end{itembox}\vspace*{0.3cm}}
-\newenvironment{issue}[1]{\vspace*{0.3cm}\begin{itembox}{Issues on #1}}{\end{itembox}\vspace*{0.3cm}}
-\newenvironment{errors}{\vspace*{0.3cm}\begin{tabular}{ll}\multicolumn{2}{l}{\bf Return Values}\\}{\end{tabular}\vspace*{0.3cm}}
+%
 \newenvironment{mytable}[3]{\begin{table}[ht]\caption{#1}\label{#2}\vspace*{-0.3cm}\begin{center}\begin{tabular}{#3}}{\end{tabular}\end{center}\end{table}}
 \newenvironment{myfigure}{\begin{figure}[ht]\begin{center}}{\end{center}\end{figure}}
-%\DefineVerbatimEnvironment{FexampleL}{Verbatim}{numbers=left,numbersep=3pt,stepnumber=5,frame=single,label=\Fort}
-%\DefineVerbatimEnvironment{FexampleR}{Verbatim}{numbers=right,numbersep=3pt,stepnumber=5,frame=single,label=\Fort}
-%\DefineVerbatimEnvironment{Cexample}L{Verbatim}{numbers=left,numbersep=3pt,stepnumber=5,frame=single,label=\C}
-%\DefineVerbatimEnvironment{CexampleR}{Verbatim}{numbers=right,numbersep=3pt,stepnumber=5,frame=single,label=\C}
-%\DefineVerbatimEnvironment{XFexampleL}{Verbatim}{numbers=left,numbersep=3pt,stepnumber=5,frame=single,label=\XMPF}
-%\DefineVerbatimEnvironment{XFexampleR}{Verbatim}{numbers=right,numbersep=3pt,stepnumber=5,frame=single,label=\XMPF}
-%\DefineVerbatimEnvironment{XCexampleL}{Verbatim}{numbers=left,numbersep=3pt,stepnumber=5,frame=single,label=\XMPC}
-%\DefineVerbatimEnvironment{XCexampleR}{Verbatim}{numbers=right,numbersep=3pt,stepnumber=5,frame=single,label=\XMPC}
 %
 \DefineVerbatimEnvironment{XACCCexampleR}{Verbatim}{numbers=right,numbersep=3pt,stepnumber=5,frame=single,label=\XACCC}
 \DefineVerbatimEnvironment{XACCFexampleL}{Verbatim}{numbers=left,numbersep=3pt,stepnumber=5,frame=single,label=\XACCF}
@@ -153,9 +108,9 @@ and High Performance Computing System Laboratory of University of Tsukuba.
 \renewcommand{\footrulewidth}{0pt}
 
 \input{1.intro.tex} \cleardoublepage
-\input{2.acc-ex.tex} \cleardoublepage
-\input{3.xmp-ex.tex} \cleardoublepage
-%\input{glossary.tex
+\input{2.xmp-ex.tex} \cleardoublepage
+\input{3.acc-ex.tex} \cleardoublepage
+%\input{glossary.tex}
 
 \cleardoublepage
 \chapter*{Acknowledgment}

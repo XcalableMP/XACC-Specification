@@ -1,25 +1,25 @@
-\chapter{{\XMP} Extension}\label{chap:xmp-ex}
+\chapter{{\XMP} Extensions}\label{chap:xmp-ex}
 This chapter defines a behavior of mixing {\XMP} and {\OACC}.
-Note that the existing {\OACC} is not extended in the {\XMP} extension.
-The {\XMP} extension can represent 
+Note that the existing {\OACC} is not extended in the {\XMP} extensions.
+The {\XMP} extensions can represent 
 (1) parallelization with keeping sequential code image using a combination of {\XMP} and {\OACC},
 and
-(2) communication among accelerator memories and between accelerator memory and host memory on different {\tt nodes}
-using {\XACC} directives or {\tt coarray} features.
+(2) communication among accelerator memories and between accelerator memory and host memory on different {\bf nodes}
+using {\XACC} directives or {\bf coarray} features.
 
 \section{Combination of {\XMP} and {\OACC}}
 \subsection{{\OACC} Directives on Data}
 \subsubsection*{Description}
-When {\tt distributed arrays} appear in {\OACC} constructs,
-global indices in {\tt distributed arrays} are used.
+When {\bf distributed arrays} appear in {\OACC} constructs,
+global indices in {\bf distributed arrays} are used.
 %Thus,
 %an {\XACC} compiler automatically translates the global indices in the {\OACC} constructs to the appropriate local indices.
-The {\tt distributed arrays} may appear in the {\OACC} {\bf update}, {\bf enter data}, {\bf exit data}, 
-{\bf host\_data}, {\bf cache}, and {\bf declare} directives,
-and the {\bf data} clause accompanied by some of 
-{\bf deviceptr}, {\bf present}, {\bf copy}, {\bf copyin}, 
-{\bf copyout}, {\bf create}, and {\bf delete} clauses.
-Data transfer of {\tt distributed array} by {\OACC} is performed on only {\tt nodes} which have elements specified by the global indices.
+The {\bf distributed arrays} may appear in the {\tt update}, {\tt enter data}, {\tt exit data}, 
+{\tt host\_data}, {\tt cache}, and {\tt declare} directives,
+and the {\tt data} clause accompanied by some of 
+{\tt deviceptr}, {\tt present}, {\tt copy}, {\tt copyin}, 
+{\tt copyout}, {\tt create}, and {\tt delete} clauses.
+Data transfer of {\bf distributed array} by {\OACC} is performed on only {\bf nodes} which have elements specified by the global indices.
 
 \subsubsection*{Example}
 \begin{myfigure}
@@ -33,7 +33,7 @@ integer :: a(N), b(N)
 !$xmp align a(i) with t(i)
 !$xmp align b(i) with t(i)
 ...
-!$acc enter data copyin(a(1:k))
+!$acc enter data copyin(a(1:K))
 !$acc data copy(b)
 ...
 \end{XACCFexampleL}
@@ -50,39 +50,39 @@ int a[N], b[N];
 #pragma xmp align a[i] with t[i]
 #pragma xmp align b[i] with t[i]
 ...
-#pragma acc enter data copyin(a[0:k])
+#pragma acc enter data copyin(a[0:K])
 #pragma acc data copy(b)
 { ...
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Code example in {\XMP} extension with {\OACC} {\bf enter\_data} directive}\label{code:ex-oacc-data}
+\caption{Code example in {\XMP} extensions with {\tt enter\_data} directive}\label{code:ex-oacc-data}
 \end{myfigure}
 
 In lines 2-6 of Fig. \ref{code:ex-oacc-data},
-{\XMP} directives declare the {\tt distributed arrays} {\it a} and {\it b}.
+the directives declare the {\bf distributed arrays} {\it a} and {\it b}.
 In line 8,
-the {\OACC} {\bf enter data} directive transfers the certain range of the {\tt distributed array} {\it a} from host memory to accelerator memory.
+the {\tt enter data} directive transfers the certain range of the {\bf distributed array} {\it a} from host memory to accelerator memory.
 Note that the range is represented by global indices.
 In line 9,
-the {\OACC} {\bf data} directive transfers the whole {\tt distributed array} {\it b} from host memory to accelerator memory.
+the {\tt data} directive transfers the whole {\bf distributed array} {\it b} from host memory to accelerator memory.
 
 \subsection{{\OACC} Loop Construct}
 \subsubsection*{Description}
-In order to perform a loop statement on accelerators in {\tt nodes} in parallel,
-{\XMP} {\bf loop} directive and {\OACC} {\bf loop} directive are used.
+In order to perform a loop statement on accelerators in {\bf nodes} in parallel,
+{\XMP} {\tt loop} directive and {\OACC} {\tt loop} directive are used.
 While
-{\XMP} {\bf loop} directive performs a loop statement in {\tt nodes} in parallel,
-{\OACC} {\bf loop} directive also performs the loop statement parallelized by the {\XMP} {\bf loop} directive 
+{\XMP} {\tt loop} directive performs a loop statement in {\bf nodes} in parallel,
+{\OACC} {\tt loop} directive also performs the loop statement parallelized by the {\XMP} {\tt loop} directive 
 on accelerators in parallel.
 For ease of writing,
-the order of {\XMP} {\bf loop} directive and {\OACC} {\bf loop} directive does not matter.
+the order of {\XMP} {\tt loop} directive and {\OACC} {\tt loop} directive does not matter.
 
 \subsubsection*{Restriction}
 \begin{itemize}
-\item In {\OACC} {\tt compute region},
-only {\XMP} {\bf loop} directive without {\bf reduction} clause can be inserted.
-\item In {\OACC} {\tt compute region},
+\item In {\OACC} {\bf compute region},
+only {\XMP} {\tt loop} directive without {\tt reduction} clause can be inserted.
+\item In {\OACC} {\bf compute region},
 targeted loop condition (lower bound, upper bound, and step of the loop)
 must remain unchanged.
 \end{itemize}
@@ -128,35 +128,35 @@ for(int i=0;i<N;i++){
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Code example in {\XMP} extension with {\OACC} loop construct}\label{code:ex-oacc-loop}
+\caption{Code example in {\XMP} extensions with {\OACC} loop construct}\label{code:ex-oacc-loop}
 \end{myfigure}
 
 In lines 2-6 of Fig. \ref{code:ex-oacc-loop},
-{\XMP} directives declare {\tt distributed arrays} {\it a} and {\it b}.
+the directives declare {\bf distributed arrays} {\it a} and {\it b}.
 In line 8,
-{\OACC} {\bf parallel} directive with {\bf data} clause transfers the {\tt distributed arrays} {\it a} and {\it b} from host memory to accelerator memory.
+the {\tt parallel} directive with the {\tt data} clause transfers the {\bf distributed arrays} {\it a} and {\it b} from host memory to accelerator memory.
 Moreover,
 in lines 8-9,
-{\OACC} {\bf parallel} directive and {\XMP} {\bf loop} directive perform the next loop statement on accelerators in {\tt nodes} in parallel.
+the {\tt parallel} directive and {\XMP} {\tt loop} directive perform the next loop statement on accelerators in {\bf nodes} in parallel.
 
 \section{Communication on Accelerated Clusters}
 \subsection{{\XACC} Directives}
-{\XACC} directives are extensions of {\XMP} {\bf reflect}, {\bf gmove}, 
-{\bf barrier}, {\bf reduction}, {\bf bcast}, and {\bf wait\_async} directives in {\XMP} global-view memory model.
+{\XACC} directives are extensions of {\tt reflect}, {\tt gmove}, 
+{\tt barrier}, {\tt reduction}, {\tt bcast}, and {\tt wait\_async} directives in {\XMP} global-view memory model.
 Moreover,
-{\bf reflect\_init} and {\bf reflect\_do} directives are added as extensions of the {\bf reflect} directive.
-When adding an {\bf acc} clause to the above directives,
-data stored on accelerator memory are transferred.
-Note that while XcalableACC {\bf gmove} directive described in Section \ref{sec:reflect} 
-and {\tt coarray} features described in Section \ref{sec:coarray} can occur communication both among accelerator memories and between accelerator memory and host memory on different {\tt nodes},
-other directives can occur communication only among accelerator memories.
+{\tt reflect\_init} and {\tt reflect\_do} directives are added as extensions of the {\tt reflect} directive.
+{\XACC} directives are directives which are added an {\tt acc} clause to the above directives.
+{\XACC} directives transfer data stored on accelerator memory.
+Note that while XcalableACC {\tt gmove} directive described in Section \ref{sec:reflect} 
+and {\bf coarray} features described in Section \ref{sec:coarray} can perform communication both among accelerator memories and between accelerator memory and host memory on different {\bf nodes},
+other directives can perform communication only among accelerator memories.
 
 This section describes only the extended parts of {\XACC} directives from {\XMP} directives. 
 For other information, refer to the {\XMP} specification\cite{xmp}.
 
 \subsubsection{reflect Construct}\label{sec:reflect}
 \subsubsection*{Synopsis}
-The {\bf reflect} construct assigns the value of a
+The {\tt reflect} construct assigns the value of a
 reflection source to the corresponding shadow object.
 
 \subsubsection*{Syntax}
@@ -185,16 +185,16 @@ where {\it reflect-width} must be one of:
 \end{tabular}
 
 \subsubsection*{Description}
-When the {\bf acc} clause is specified,
-the {\bf reflect} construct updates each of the shadow object of the
+When the {\tt acc} clause is specified,
+the {\tt reflect} construct updates each of the shadow object of the
 array specified by {\it array-name} on accelerator memory with the value of its corresponding
 reflection source.
 
 \subsubsection*{Restriction}
 \begin{itemize}
- \item When the {\bf acc} clause is specified,
+ \item When the {\tt acc} clause is specified,
    the arrays specified by the sequence of {\it array-name}'s must be allocated on accelerator memory.
- \item This construct must not appear in {\OACC} {\tt compute region}.
+ \item This construct must not appear in {\OACC} {\bf compute region}.
 \end{itemize}
 
 \subsubsection*{Example}
@@ -230,22 +230,22 @@ int a[N];
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Code example in {\XACC} {\bf reflect} construct}\label{code:reflect}
+\caption{Code example in {\tt reflect} construct}\label{code:reflect}
 \end{myfigure}
 
 In lines 2-5 of Fig. \ref{code:reflect},
-{\XMP} directives declare {\tt distributed array} {\it a}.
+the directives declare {\bf distributed array} {\it a}.
 In line 6, 
-{\XMP} {\bf shadow} directive allocates shadow areas of the {\tt distributed array} {\it a}.
+the {\tt shadow} directive allocates shadow areas of the {\bf distributed array} {\it a}.
 In line 8,
-{\OACC} {\bf enter data} directive transfers the {\tt distributed array} {\it a} with the shadow areas from host memory to accelerator memory.
+the {\tt enter data} directive transfers the {\bf distributed array} {\it a} with the shadow areas from host memory to accelerator memory.
 In line 9,
-{\XACC} {\bf reflect} directive updates the shadow areas of the {\tt distributed array} {\it a} on accelerator memory between neighboring {\tt nodes}.
+the {\tt reflect} directive updates the shadow areas of the {\bf distributed array} {\it a} on accelerator memory between neighboring {\bf nodes}.
 
 \subsubsection{reflect\_init and reflect\_do Constructs}\label{sec:gmove}
 \subsubsection*{Synopsis}
-Since the {\bf reflect\_init} construct performs the initialization processes of the {\bf reflect} construct,
-the {\bf reflect\_do} construct performs communication of the {\bf reflect} construct.
+Since the {\tt reflect\_init} construct performs the initialization processes of the {\tt reflect} construct,
+the {\tt reflect\_do} construct performs communication of the {\tt reflect} construct.
 
 \subsubsection*{Syntax}
 \begin{tabular}{ll}
@@ -283,20 +283,20 @@ where {\it reflect-width} must be one of:
 \end{tabular}
 
 \subsubsection*{Description}
-The {\bf reflect} construct is divided into {\bf reflect\_init} and {\bf reflect\_do} constructs to improve performance like the MPI persistent communication\cite{mpi}.
+The {\tt reflect} construct is divided into {\tt reflect\_init} and {\tt reflect\_do} constructs to improve performance like the MPI persistent communication\cite{mpi}.
 
 As a typical example, 
-if a {\bf reflect} construct is called repeatedly with the same condition in a loop statement, 
-inserting a {\bf reflect\_init} construct before the loop statement 
-and replacing the {\bf reflect} construct with a {\bf reflect\_do} construct will improve its performance
+if a {\tt reflect} construct is called repeatedly with the same condition in a loop statement, 
+inserting a {\tt reflect\_init} construct before the loop statement 
+and replacing the {\tt reflect} construct with a {\tt reflect\_do} construct will improve its performance
 because unneeded initialization processes are removed.
 
 \subsubsection*{Restriction}
 \begin{itemize}
- \item When the {\bf acc} clause is specified,
+ \item When the {\tt acc} clause is specified,
    the arrays specified by the sequence of {\it array-name}'s must be allocated on accelerator memory.
- \item These constructs must not appear in {\OACC} {\tt compute region}.
- \item The {\bf reflect\_init} directive must execute before the {\bf reflect\_init} directive executes.
+ \item These constructs must not appear in {\OACC} {\bf compute region}.
+ \item The {\tt reflect\_init} directive must execute before the {\tt reflect\_init} directive executes.
 \end{itemize}
 
 \subsubsection*{Example}
@@ -336,26 +336,26 @@ int a[N];
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Code example in {\XACC} {\bf reflect\_init} and {\bf reflect\_do} constructs}\label{code:reflect_initdo}
+\caption{Code example in {\tt reflect\_init} and {\tt reflect\_do} constructs}\label{code:reflect_initdo}
 \end{myfigure}
 
 In lines 2-5 of Fig. \ref{code:reflect_initdo},
-{\XMP} directives declare {\tt distributed array} {\it a}.
+the directives declare {\bf distributed array} {\it a}.
 In line 6,
-{\XMP} {\bf shadow} directive allocates shadow areas of the {\tt distributed array} {\it a}.
+the {\tt shadow} directive allocates shadow areas of the {\bf distributed array} {\it a}.
 In line 8,
-{\OACC} {\bf enter data} directive transfers the {\tt distributed array} {\it a} with the shadow areas from host memory to accelerator memory.
+the {\tt enter data} directive transfers the {\bf distributed array} {\it a} with the shadow areas from host memory to accelerator memory.
 In line 9,
-{\XACC} {\bf reflect\_init} directive performs initialization processes for the {\bf reflect\_do} construct which targets the {\tt distributed array} {\it a}.
+the {\tt reflect\_init} directive performs initialization processes for the {\tt reflect\_do} construct which targets the {\bf distributed array} {\it a}.
 In line 11,
-{\XACC} {\bf reflect\_do} directive updates the shadow areas of the {\tt distributed array} {\it a} on accelerator memory between neighboring {\tt nodes}
+the {\tt reflect\_do} directive updates the shadow areas of the {\bf distributed array} {\it a} on accelerator memory between neighboring {\bf nodes}
 without its initialization processes.
 
 \subsubsection{gmove Construct}\label{sec:gmove}
 \subsubsection*{Synopsis}
-The {\tt \Directive{gmove}} construct allows an assignment statement,
+The {\tt gmove} construct allows an assignment statement,
 which may cause communication, to be executed possibly in parallel by
-the executing {\tt nodes}.
+the executing {\bf nodes}.
 
 \subsubsection*{Syntax}
 \begin{tabular}{ll}
@@ -367,9 +367,9 @@ the executing {\tt nodes}.
 
 \subsubsection*{Description}
 \begin{itemize}
- \item When the {\bf acc} clause is specified and the variable is not specified by {\it variable} in the parenthesis,
+ \item When the {\tt acc} clause is specified and the variable is not specified by {\it variable} in the parenthesis,
 variables of both sides in the assignment statement on accelerator memory are targeted.
- \item When the {\bf acc} clause is specified and the variable is specified by {\it variable} in the parenthesis,
+ \item When the {\tt acc} clause is specified and the variable is specified by {\it variable} in the parenthesis,
 the specified variable on accelerator memory is targeted, 
 and the unspecified variable on host memory is targeted.
 \end{itemize}
@@ -377,7 +377,7 @@ and the unspecified variable on host memory is targeted.
 \subsubsection*{Restriction}
 \begin{itemize}
  \item The variables targeted on accelerator memory must be allocated on accelerator memory.
- \item This construct must not appear in {\OACC} {\tt compute region}.
+ \item This construct must not appear in {\OACC} {\bf compute region}.
 \end{itemize}
 
 \subsubsection*{Example}
@@ -421,23 +421,23 @@ int a[N], b[N];
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Code example in {\XACC} {\bf gmove} construct}\label{code:gmove}
+\caption{Code example in {\tt gmove} construct}\label{code:gmove}
 \end{myfigure}
 
 In lines 2-6 of Fig. \ref{code:gmove},
-{\XMP} directives declare {\tt distributed arrays} {\it a} and {\it b}.
+the directives declare {\bf distributed arrays} {\it a} and {\it b}.
 In line 8,
-{\OACC} {\bf enter data} directive transfers the {\tt distributed arrays} {\it a} and {\it b} from host memory to accelerator memory.
+the {\tt enter data} directive transfers the {\bf distributed arrays} {\it a} and {\it b} from host memory to accelerator memory.
 In lines 9-10,
-{\XACC} {\bf gmove} construct copies the whole {\tt distributed array} {\it b} to
-that of the {\tt distributed array} {\it a} on accelerator memories.
+the {\tt gmove} construct copies the whole {\bf distributed array} {\it b} to
+that of the {\bf distributed array} {\it a} on accelerator memories.
 In lines 12-13,
-{\XACC} {\bf gmove} construct copies the whole {\tt distributed array} {\it b} on accelerator memory to
-that of the {\tt distributed array} {\it a} on host memory.
+the {\tt gmove} construct copies the whole {\bf distributed array} {\it b} on accelerator memory to
+that of the {\bf distributed array} {\it a} on host memory.
 
 \subsubsection{barrier Construct}\label{sec:barrier}
 \subsubsection*{Synopsis}
-The {\bf barrier} construct specifies an explicit barrier
+The {\tt barrier} construct specifies an explicit barrier
 at the point at which the construct appears.
 
 \subsubsection*{Syntax}
@@ -450,9 +450,9 @@ at the point at which the construct appears.
 
 \subsubsection*{Description}
 \begin{itemize}
- \item When the {\bf acc} clause is specified,
+ \item When the {\tt acc} clause is specified,
 the barrier construct blocks until all outgoing asynchronous operations on accelerators are completed.
- \item When the {\bf acc} clause is not specified,
+ \item When the {\tt acc} clause is not specified,
 the barrier construct does not guarantee that an outgoing asynchronous operation on accelerator is completed.
 \end{itemize}
 
@@ -477,17 +477,17 @@ the barrier construct does not guarantee that an outgoing asynchronous operation
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Code example in {\XACC} {\bf barrier} construct}\label{code:barrier}
+\caption{Code example in {\tt barrier} construct}\label{code:barrier}
 \end{myfigure}
 
 In line 1,
-{\XMP} {\bf nodes} directive defines {\tt node set} {\it p}.
+the {\tt nodes} directive defines {\tt node set} {\it p}.
 In line 3,
-{\XACC} {\bf barrier} directive performs a barrier operation for accelerators on all {\tt node}.
+the {\tt barrier} directive performs a barrier operation for accelerators on all {\bf node}.
 
 \subsubsection{reduction Construct}\label{sec:reduction}
 \subsubsection*{Synopsis}
-The {\bf reduction} construct performs a reduction operation among {\tt nodes}.
+The {\tt reduction} construct performs a reduction operation among {\bf nodes}.
 
 \subsubsection*{Syntax}
 \Syntax{reduction}
@@ -546,7 +546,7 @@ where {\it reduction-kind} is one of:
 \end{tabular}
 
 \subsubsection*{Description}
-When the {\bf acc} clause is specified,
+When the {\tt acc} clause is specified,
 the {\tt reduction} construct performs a type of
 reduction operation specified by {\it reduction-kind} for the specified
 local variables among the accelerators and 
@@ -554,9 +554,9 @@ sets the reduction results to the variables on each of the accelerators.
 
 \subsubsection*{Restriction}
 \begin{itemize}
- \item When the {\bf acc} clause is specified,
+ \item When the {\tt acc} clause is specified,
    the variables specified by the sequence of {\it variable}'s must be allocated on accelerator memory.
- \item This construct must not appear in {\OACC} {\tt compute region}.
+ \item This construct must not appear in {\OACC} {\bf compute region}.
 \end{itemize}
 
 \subsubsection*{Example}
@@ -584,20 +584,20 @@ int a;
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Code example in {\XACC} {\bf reduction} construct}\label{code:reduction}
+\caption{Code example in {\tt reduction} construct}\label{code:reduction}
 \end{myfigure}
 
 In line 2,
-{\XMP} {\bf nodes} directive defines {\tt node set} {\it p}.
+the {\tt nodes} directive defines {\bf node set} {\it p}.
 In line 4,
-{\OACC} {\bf enter data} directive transfers the local variable {\it a} from host memory to accelerator memory.
+the {\tt enter data} directive transfers the local variable {\it a} from host memory to accelerator memory.
 In line 5,
-{\XACC} {\bf reduction} directive calculates a total value of the variable {\it a} stored on each accelerator
-memory in each {\tt node}.
+the {\tt reduction} directive calculates a total value of the variable {\it a} stored on each accelerator
+memory in each {\bf node}.
 
 \subsubsection{bcast Construct}\label{sec:bcast}
 \subsubsection*{Synopsis}
-The {\bf bcast} construct performs broadcast communication from a specified {\tt node}.
+The {\tt bcast} construct performs broadcast communication from a specified {\bf node}.
 
 \subsubsection*{Syntax}
 
@@ -620,19 +620,19 @@ The {\bf bcast} construct performs broadcast communication from a specified {\tt
 \end{tabular}
 
 \subsubsection*{Description}
-When the {\bf acc} clause is specified, 
+When the {\tt acc} clause is specified, 
 the values of the variables specified by the sequence of {\it variable}'s on accelerator memory
-(called {\tt broadcast variables}) are broadcasted
-from the {\tt node} specified by the {\tt from} clause (called the
-{\tt source node}) to each of the {\tt nodes} in the {\tt node set} specified
+(called {\bf broadcast variables}) are broadcasted
+from the {\bf node} specified by the {\tt from} clause (called the
+{\bf source node}) to each of the {\bf nodes} in the {\bf node set} specified
 by the {\tt on} clause. After executing this construct,
-the values of the {\tt broadcast variables} become the same as those in the {\tt source node}.
+the values of the {\bf broadcast variables} become the same as those in the {\bf source node}.
 
 \subsubsection*{Restriction}
 \begin{itemize}
- \item When the {\bf acc} clause is specified,
+ \item When the {\tt acc} clause is specified,
    the variables specified by the sequence of {\it variable}'s must be allocated on accelerator memory.
- \item This construct must not appear in {\OACC} {\tt compute region}.
+ \item This construct must not appear in {\OACC} {\bf compute region}.
 \end{itemize}
 
 \subsubsection*{Example}
@@ -660,19 +660,19 @@ int a;
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Code example in {\XACC} {\bf bcast} construct}\label{code:bcast}
+\caption{Code example in {\tt bcast} construct}\label{code:bcast}
 \end{myfigure}
 
 In line 2,
-{\XMP} {\bf nodes} directive defines {\tt node set} {\it p}.
+the {\tt nodes} directive defines {\bf node set} {\it p}.
 In line 4,
-{\OACC} {\bf enter data} directive transfers the local variable {\it a} from host memory to accelerator memory.
+the {\tt enter data} directive transfers the local variable {\it a} from host memory to accelerator memory.
 In line 5,
-{\XACC} {\bf bcast} directive broadcasts the variable {\it a} stored on accelerator memory to all {\it nodes}.
+the {\tt bcast} directive broadcasts the variable {\it a} stored on accelerator memory to all {\it nodes}.
 
 \subsubsection{wait\_async Construct}\label{sec:waitasync}
 \subsubsection*{Synopsis}
-The {\bf wait\_async} construct guarantees asynchronous
+The {\tt wait\_async} construct guarantees asynchronous
 communications specified by {\it async-id} are complete.
 
 \subsubsection*{Syntax}
@@ -687,14 +687,14 @@ communications specified by {\it async-id} are complete.
 \end{tabular}
 
 \subsubsection*{Description}
-When the {\bf acc} clause is specified,
-the {\bf wait\_async} construct blocks and therefore
+When the {\tt acc} clause is specified,
+the {\tt wait\_async} construct blocks and therefore
 statements following it are not executed until all of the asynchronous
 communications that are specified by {\it async-id}'s and issued on the accelerators in
-{\tt node set} specified by the {\tt on} clause are complete.
+{\bf node set} specified by the {\tt on} clause are complete.
 
 \subsubsection*{Restriction}
-This construct must not appear in {\OACC} {\tt compute region}.
+This construct must not appear in {\OACC} {\bf compute region}.
 
 \subsubsection*{Example}
 \begin{myfigure}
@@ -725,35 +725,35 @@ int a;
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Code example in {\XACC} {\bf wait\_async} construct}\label{code:waitasync}
+\caption{Code example in {\tt wait\_async} construct}\label{code:waitasync}
 \end{myfigure}
 
 In line 2,
-{\XMP} {\bf nodes} directive defines {\tt node set} {\it p}.
+the {\tt nodes} directive defines {\bf node set} {\it p}.
 In line 4,
-{\OACC} {\bf enter data} directive transfers the local variable {\it a} from host memory to accelerator memory.
+the {\tt enter data} directive transfers the local variable {\it a} from host memory to accelerator memory.
 In line 5,
-{\XACC} {\bf reduction} directive performs asynchronously.
+the {\tt reduction} directive performs asynchronously.
 In line 7,
-{\XACC} {\bf wait\_async} construct blocks until the asynchronous {\bf reduction} operation at line 5 is complete.
+the {\tt wait\_async} construct blocks until the asynchronous reduction operation at line 5 is complete.
 
 \subsection{Coarray Features} \label{sec:coarray}
 \subsubsection*{Synopsis}
-{\XACC} can perform one-sided communication (put/get operations) for data on accelerator memory using {\tt coarray} features,
+{\XACC} can perform one-sided communication (put/get operations) for data on accelerator memory using {\bf coarray} features,
 which is based on {\XMP} local-view memory model.
-A combination of {\tt coarray} syntax and {\OACC} {\bf host\_data} construct enables communication between accelerators.
+A combination of {\bf coarray} syntax and {\tt host\_data} construct enables communication between accelerators.
 
 \subsubsection*{Description}
-If {\tt coarrays} appear in {\OACC} {\bf use\_device} clause of any {\OACC} enclosing {\bf host\_data} construct, 
+If {\bf coarrays} appear in {\tt use\_device} clause of any enclosing {\tt host\_data} construct, 
 communication targets data on the accelerator side. 
-{\tt Coarray} operations on accelerators are synchronized using the same synchronization functions in {\XMP}.
+{\bf Coarray} operations on accelerators are synchronized using the same synchronization functions in {\XMP}.
 
 \subsubsection*{Restriction}
 \begin{itemize}
- \item Only {\OACC} {\bf declare} directive can declare a {\tt coarray} on accelerator memory.
+ \item Only {\tt declare} directive can declare a {\bf coarray} on accelerator memory.
    For example,
-   {\OACC} {\bf enter data} and {\bf copy} directives cannot declare a {\tt coarray} on accelerator memory.
- \item The {\tt coarray} syntax must not appear in {\OACC} {\tt compute region}.
+   {\tt enter data} and {\tt copy} directives cannot declare a {\bf coarray} on accelerator memory.
+ \item The {\bf coarray} syntax must not appear in {\OACC} {\bf compute region}.
 \end{itemize}
 
 \subsubsection*{Example}
@@ -797,17 +797,17 @@ xmp_sync_all(NULL);
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Code example in {\XACC} coarray features}\label{code:coarray}
+\caption{Code example in coarray features}\label{code:coarray}
 \end{myfigure}
 
 In line 3 of Fig. \ref{code:coarray},
-{\OACC} {\bf declare} directive declares a {\tt coarray} {\it a} and a array {\it b} on accelerator memory.
+the {\tt declare} directive declares a {\bf coarray} {\it a} and a array {\it b} on accelerator memory.
 In lines 6-7,
-{\tt node} 1 performs put operation, where
-the whole array {\it b} on accelerator memory in {\tt node} 1 is transferred to the {\tt coarray} {\it a} on accelerator memory in {\tt node} 2.
+{\bf node} 1 performs put operation, where
+the whole array {\it b} on accelerator memory in {\bf node} 1 is transferred to the {\bf coarray} {\it a} on accelerator memory in {\bf node} 2.
 In lines 9-10,
-{\tt node} 1 performs get operation, where
-the whole {\tt coarray} {\it a} on accelerator memory in {\tt node} 3 is transferred to the array {\it b} on host memory in {\tt node} 1.
+{\bf node} 1 performs get operation, where
+the whole {\bf coarray} {\it a} on accelerator memory in {\bf node} 3 is transferred to the array {\it b} on host memory in {\bf node} 1.
 In line 13,
-the {\bf sync all} statement in {\XACCF} or the {\bf xmp\_sync\_all} function in {\XACCC} synchronizes all {\tt nodes} and guarantees completion of ongoing coarray operations.
+the {\tt sync all} statement in {\XACCF} or the {\tt xmp\_sync\_all} function in {\XACCC} synchronizes all {\bf nodes} and guarantees completion of ongoing coarray operations.
 
