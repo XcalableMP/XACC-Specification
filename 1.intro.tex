@@ -64,9 +64,9 @@ For example,
 if you represent communication of {\bf distributed array} among accelerators shown in Fig. \ref{fig:concept} by the combination of {\XMP} and {\OACC},
 you need to specify explicitly communication between host and accelerator by {\OACC} and that between hosts by {\XMP}.
 Moreover,
-you need to calculate manually global indices of the {\bf distributed array} owned by each {\bf node}.
+you need to calculate manually indices of the {\bf distributed array} owned by each {\bf node}.
 By contrast,
-{\XACC} directives can represent such communication among accelerators directly.
+{\XACC} directives can represent such communication among accelerators directly using global indices.
 
 \subsection{{\OACC} Extensions}
 
@@ -85,10 +85,10 @@ the {\XMP}-extension construct may allocate, deallocate, or transfer data on acc
 An {\OACC} construct or an {\OACC}-extension construct may define {\bf parallel regions}, such as work-sharing loops, 
 and offloads it to accelerators under control of the host.
 
-When a {\bf node} encounters a construct 
+When a {\bf node} encounters a loop construct 
 targeted by a combination of {\XMP} {\tt loop} and {\OACC} {\tt loop} directives,
-it executes the loop in parallel with other {\bf accelerators},
-so that each iteration of the loop is independently executed by the {\bf accelerator}
+it executes the loop construct in parallel with other {\bf accelerators},
+so that each iteration of the loop construct is independently executed by the {\bf accelerator}
 where a specified data element resides.
 
 When a {\bf node} encounters a {\XACC} synchronization or a {\XACC} communication directive,
@@ -110,7 +110,7 @@ They are replicated in the local memory of each of the {\bf executing nodes}.
 
 A {\bf node} can access directly only {\bf local data} and sections of {\bf global data} that are allocated in its local memory.
 To access data in remote memory, 
-explicit communication must be specified in such ways as the global communication constructs and the coarray assignments.
+explicit communication must be specified in such ways as the global communication constructs and the {\bf coarray} assignments.
 
 Particularly in {\XACCF}, 
 for common blocks that include any global variables, 
@@ -159,37 +159,37 @@ the directives are case-sensitive.
 \end{tabular}
 \vspace{0.5cm}
 
-Directives are classified as {\bf declarative directives} and {\bf executable directives}\cite{xmp}.
-
-The {\bf declarative directives} are {\tt nodes}, {\tt template}, {\tt distribute}, {\tt align},
-{\tt shadow}, {\tt coarray}, {\tt declare}, and {\tt routine} directives.
-
-The {\bf executable directives} are {\tt template\_fix}, {\tt task}, {\tt tasks}, {\XMP} {\tt loop}, 
-{\tt array}, {\tt reflect}, {\tt reflect\_init}, {\tt reflect\_do}, {\tt gmove}, {\tt barrier}, 
-{\tt reduction}, {\tt bcast}, and {\tt wait\_async},
-{\tt parallel}, {\tt kernels}, {\tt data}, {\tt host\_data}, {\OACC} {\tt loop},
-{\tt cache}, {\tt atomic}, {\tt init}, {\tt shutdown}, {\tt set}, {\tt update}, 
-{\tt wait}, {\tt enter\_data}, and {\tt exit\_data} directives.
-An {\bf executable directive} and its associated user code make up an {\XACC} construct, 
-as in the following format:
-
-\vspace{0.5cm}
-\begin{tabular}{ll}
-\verb![F]! & \verb|!$xmp| {\it directive-name clause} ...\\
- & \hspace{0.5cm} {\it structured-block} \\
-\verb![F]! & \verb|!$acc| {\it directive-name clause} ...\\
- & \hspace{0.5cm} {\it structured-block} \\
-\end{tabular}
-
-\vspace{0.3cm}
-
-\begin{tabular}{ll}
-\verb![C]! & \verb|#pragma xmp| {\it directive-name clause} ...\\
- & \hspace{0.5cm} {\it structured-block} \\
-\verb![C]! & \verb|#pragma acc| {\it directive-name clause} ...\\
- & \hspace{0.5cm} {\it structured-block} \\
-\end{tabular}
-\vspace{0.5cm}
+%Directives are classified as {\bf declarative directives} and {\bf executable directives}\cite{xmp}.
+%
+%The {\bf declarative directives} are {\tt nodes}, {\tt template}, {\tt distribute}, {\tt align},
+%{\tt shadow}, {\tt coarray}, {\tt declare}, and {\tt routine} directives.
+%
+%The {\bf executable directives} are {\tt template\_fix}, {\tt task}, {\tt tasks}, {\XMP} {\tt loop}, 
+%{\tt array}, {\tt reflect}, {\tt reflect\_init}, {\tt reflect\_do}, {\tt gmove}, {\tt barrier}, 
+%{\tt reduction}, {\tt bcast}, {\tt wait\_async},
+%{\tt parallel}, {\tt kernels}, {\tt data}, {\tt host\_data}, {\OACC} {\tt loop},
+%{\tt cache}, {\tt atomic}, {\tt init}, {\tt shutdown}, {\tt set}, {\tt update}, 
+%{\tt wait}, {\tt enter\_data}, and {\tt exit\_data} directives.
+%An {\bf executable directive} and its associated user code make up an {\XACC} construct, 
+%as in the following format:
+%
+%\vspace{0.5cm}
+%\begin{tabular}{ll}
+%\verb![F]! & \verb|!$xmp| {\it directive-name clause} ...\\
+% & \hspace{0.5cm} {\it structured-block} \\
+%\verb![F]! & \verb|!$acc| {\it directive-name clause} ...\\
+% & \hspace{0.5cm} {\it structured-block} \\
+%\end{tabular}
+%
+%\vspace{0.3cm}
+%
+%\begin{tabular}{ll}
+%\verb![C]! & \verb|#pragma xmp| {\it directive-name clause} ...\\
+% & \hspace{0.5cm} {\it structured-block} \\
+%\verb![C]! & \verb|#pragma acc| {\it directive-name clause} ...\\
+% & \hspace{0.5cm} {\it structured-block} \\
+%\end{tabular}
+%\vspace{0.5cm}
 
 \section{Organization of This Document}
 The remainder of this document is structured as follows:
