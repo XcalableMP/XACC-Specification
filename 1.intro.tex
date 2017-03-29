@@ -74,6 +74,8 @@ By contrast,
 The execution model of {\XACC} is a combination of those of {\XMP} and {\OACC}.
 While the execution model of a host CPU programming is based on that of {\XMP},
 that of an accelerator programming is based on that of {\OACC}.
+Unless otherwise specified,
+each {\bf node} behaves exactly as specified in the {\XMP} specification\cite{xmp} or the {\OACC} specification\cite{openacc}.
 %For details, refer to each specification\cite{xmp,openacc}.
 
 An {\XACC} program execution is based on the SPMD model, 
@@ -100,6 +102,7 @@ Note that neither synchronizations nor communications occur without these constr
 There are two classes of data in {\XACC}: {\bf global data} and {\bf local data} as with {\XMP}. 
 Data declared in an {\XACC} program are local by default.
 Both {\bf global data} and {\bf local data} can exist on host memory and accelerator memory.
+About the data models of host memory and accelerator memory, refer to the OpenACC specification\cite{openacc}.
 
 {\bf Global data} are ones that are distributed onto the {\bf executing node set} by the {\tt align} directive.
 Each fragment of a {\bf global data} is allocated in host memory of a {\bf node} in the {\bf executing node set}.
