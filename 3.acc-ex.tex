@@ -1,1 +1,209 @@
 \chapter{{\OACC} Extension}\label{chap:acc-ex}
+This chapter defines an extension of {\OACC} in {\XACC}.
+The extension can represent offload works to multiple-accelerators on each {\tt node}.
+
+\section{devices Directive}
+\subsection*{Synopsis}
+The {\bf devices} directive declares a set of devices.
+
+\subsubsection*{Syntax}
+\begin{tabular}{ll}
+  \verb![F]! & \verb|!$acc| {\tt devices} {\it devices-decl} {\openb}, {\it devices-decl} {\closeb}...\\
+  \verb![C]! & \verb|#pragma acc| {\tt devices} {\it devices-decl} {\openb}, {\it devices-decl} {\closeb}...
+\end{tabular}
+
+\vspace{1em}
+where {\it device-decl} is one of:
+\vspace{1em}
+
+\begin{tabular}{lll}
+  \hspace{0.5cm} & & {\it devices-name} \verb|(| {\it devices-spec} \verb|)| \\
+  \hspace{0.5cm} & & {\it devices-name} \verb|(| {\it devices-spec} \verb|)| {\openb} {\tt =} {\it predefined-devices-ref} {\closeb} \\
+  %{\openb}, {\it devices-spec} {\closeb}...
+  \hspace{0.5cm} & \verb![C]! & {\it devices-name} \verb|[| {\it devices-spec} \verb|]| \\
+  \hspace{0.5cm} & \verb![C]! & {\it devices-name} \verb|[| {\it devices-spec} \verb|]| {\openb} {\tt =} {\it predefined-devices-ref} {\closeb}
+  %{\openb} \verb|[| {\it devices-spec} \verb|]|... {\closeb}
+\end{tabular}
+
+\vspace{1em}
+and {\it devices-spec} is one of:
+\vspace{1em}
+
+\begin{tabular}{ll}
+ \hspace{0.5cm} & * \\
+                & {\it int-expr}
+\end{tabular}
+
+\vspace{1em}
+and {\it predefined-devices-ref} is one of:
+\vspace{1em}
+
+\begin{tabular}{ll}
+  \hspace{0.5cm} & {\it device-type-name} \verb|(| * $\vert$ {\it int-expr} $\vert$ {\it int-expr} : {\it int-expr}\verb|)| \\
+                 & {\it device-type-name} \verb|[| * $\vert$ {\it int-expr} $\vert$ {\it int-expr} : {\it int-expr}\verb|]|
+%                & {\it device-type-name} \verb|(| {\it int-expr} \verb|)|\\
+%                & {\it device-type-name} \verb|(| {\it int-expr} : {\it int-expr} \verb|)|
+\end{tabular}
+
+\subsubsection*{Description}
+The {\bf device} directive declares a device array that corresponds to a device set.
+
+The first and third forms are used to declare a device array that corresponds to the entire device set.
+The second and fourth forms are used to declare a device array, each device of which is
+assigned to a device of the device set is specified by {\it predefined-devices-ref} at the corresponding position.
+
+%% In the first and second forms which use parentheses,
+%% the corresponding position is Fortran's array element order, as if the device set were a one-dimensional device array.
+%% In the third and fourth forms which use square brackets,
+%% the corresponding position is C's array element order, as if the device set were a one-dimensional device array.
+
+\subsubsection*{Restriction}
+\begin{itemize}
+\item {\it devices-name} must not conflict with any other local name in
+      the same scoping unit.
+ %% \item When the {\bf acc} clause is specified,
+ %%   the arrays specified by the sequence of {\it array-name}'s must be allocated on accelerator memory.
+ \item This construct must not appear in {\OACC} {\tt compute region}.
+\end{itemize}
+
+\subsubsection*{Example}
+The following are examples of the devices declaration. The device array {\tt d} corresponds to the entire default device set and the device array {\tt e} is a subset of the predefined device array {\tt nvidia}. The program must be executed by a node which has four or more NVIDIA accelerator devices.
+%
+\begin{myfigure}
+\begin{minipage}{0.45\hsize}
+\begin{center}
+\begin{XACCFexampleL}
+!$acc devices d(*)
+!$acc devices e(2) = nvidia(3:4)  
+\end{XACCFexampleL}
+\end{center}
+\end{minipage}
+%
+\begin{minipage}{0.53\hsize}
+\begin{center}
+\begin{XACCCexampleR}
+#pragma acc devices d[*]
+#pragma acc devices e[2] = nvidia[2:2]
+\end{XACCCexampleR}
+\end{center}
+\end{minipage}
+\caption{Code example in {\XACC} {\bf devices} directive}\label{code:devices}
+\end{myfigure}
+
+
+
+\subsection{Device Reference}
+\subsection*{Synopsis}
+The device reference is used to reference a device set.
+
+\subsubsection*{Syntax}
+\begin{tabular}{llll}
+             & {\it devices-ref} & {\bf is} & {\it devices-name} {\openb}\verb|(| {\it devices-subscript} \verb|)|{\closeb}\\
+  \verb![C]! & {\it devices-ref} & {\bf is} & {\it devices-name} {\openb}\verb|[| {\it devices-subscript} \verb|]|{\closeb}
+\end{tabular}
+
+\vspace{1em}
+where {\it devices-subscript} must be one of:
+\vspace{1em}
+
+\begin{tabular}{ll}
+ \hspace{0.5cm} & {\it int-expr} \\
+                & {\it triplet}
+\end{tabular}
+
+\subsubsection*{Description}
+A device reference by {\it devices-name} represents a device set corresponding to the device array specified by the name or its subarray.
+%% A device reference by ``*'' represents the executing device set.
+
+\subsubsection*{Example}
+Assume that {\tt d} is the name of a device array.
+\begin{itemize}
+\item To specify a device set to which the declared device array corresponds,\\
+
+\begin{myfigure}
+\begin{minipage}{0.40\hsize}
+\begin{center}
+\begin{XACCFexampleL}
+!$acc devices e(1) = d(1)
+!$acc devices f(3) = d(2:4)
+\end{XACCFexampleL}
+\end{center}
+\end{minipage}
+%
+\begin{minipage}{0.45\hsize}
+\begin{center}
+\begin{XACCCexampleR}
+#pragma acc devices e[1] = d[0]
+#pragma acc devices f[1] = d[1:3]
+\end{XACCCexampleR}
+\end{center}
+\end{minipage}
+\caption{Code example in {\XACC} device reference}\label{code:device_ref}
+\end{myfigure}
+
+\item ...
+
+\end{itemize}
+
+
+
+\section{Data Mapping Clauses}
+\subsection{layout Clause}
+
+\subsection{shadow Clause}
+
+
+
+\section{Communication on Accelerators}
+\subsection{barrier\_device Construct}
+\subsection*{Synopsis}
+The {\tt barrier\_device} construct specifies an explicit barrier among devices at the point which the construct appears.
+
+\subsubsection*{Syntax}
+\begin{tabular}{ll}
+  \verb![F]! & \verb|!$acc barrier_device|       {\openb}\verb|on_device(| {\it devices-ref} \verb|)|{\closeb}\\
+  \verb![C]! & \verb|#pragma acc barrier_device| {\openb}\verb|on_device(| {\it devices-ref} \verb|)|{\closeb}
+\end{tabular}
+
+\subsubsection*{Description}
+The barrier\_device construct blocks accelerator devices until all outgoing asynchronous operations on them are completed regardless of the host operations.
+The construct is performed among the device set specified by the {\tt on\_device} clause.
+If no {\tt on\_device} clause is specified, then it is assumed that the default device set is specified in it.
+
+\subsubsection*{Restriction}
+\begin{itemize}
+\item This construct must not appear in {\OACC} {\tt compute region}.
+\end{itemize}
+
+\subsubsection*{Example}
+The following are examples of the barrier\_devices construct.
+In line 1--2, the {\tt devices} directives define device set {\tt d} and {\tt e}.
+In line 4--5, the first {\tt barrier\_device} construct performs a barrier operation for all devices, 
+and the second one performs a barrier operation for devices in the device set {\tt e}.
+%
+\begin{myfigure}
+\begin{minipage}{0.45\hsize}
+\begin{center}
+\begin{XACCFexampleL}
+!$acc devices d(*)
+!$acc devices e(2) = d(1:2)
+...  
+!$acc barrier_device
+!$acc barrier_device on_device(e)  
+\end{XACCFexampleL}
+\end{center}
+\end{minipage}
+%
+\begin{minipage}{0.53\hsize}
+\begin{center}
+\begin{XACCCexampleR}
+#pragma acc devices d[*]
+#pragma acc devices e[2] = d[0:2]
+...
+#pragma acc barrier_device
+#pragma acc barrier_device on_device(e)
+\end{XACCCexampleR}
+\end{center}
+\end{minipage}
+\caption{Code example in {\XACC} {\bf barrier\_device} construct}\label{code:barrier_device}
+\end{myfigure}
