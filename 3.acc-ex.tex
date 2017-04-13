@@ -246,7 +246,92 @@ for(int i = 0; i < N; i++){
 \end{myfigure}
 
 \subsection{shadow Clause}
+\subsection*{Synopsis}
+The {\tt shadow} clause allocates the shadow area for a distributed array on devices.
 
+\subsubsection*{Syntax}
+\begin{tabular}{ll}
+  \verb![F]! & \verb|shadow( (| {\it shadow-width} {\openb}, {\it shadow-width} {\closeb} ... \verb|) )|\\
+  \verb![C]! & \verb|shadow( [| {\it shadow-width} \verb|]| {\openb} \verb|[| {\it shadow-width} \verb|]| {\closeb} ... \verb|)|
+\end{tabular}
+
+\vspace{1em}
+where {\it shadow-width} must be one of:
+\vspace{1em}
+
+\begin{tabular}{ll}
+ \hspace{0.5cm} & {\it int-expr} \\
+                & {\it int-expr} {\tt :} {\it int-expr}
+%                & {\tt *}
+\end{tabular}
+
+\subsubsection*{Description}
+
+The {\tt shadow} clause may appear on {\tt declare} directives.
+The {\tt shadow} clause specifies the width of the shadow area of arrays on the {\tt declare} directive, which is used to communicate the neighbor element of the block of the arrays.
+%
+When {\it shadow-width} is of the form ``{\it int-expr} : {\it int-expr},''
+the shadow area of the width specified by the first {\it int-expr} is added at the lower bound and that specified by the second
+one at the upper bound in the dimension.
+%
+When {\it shadow-width} is of the form {\it int-expr}, the shadow
+area of the same width specified is added at both the upper and lower
+bounds in the dimension.
+%
+
+\subsubsection*{Restriction}
+\begin{itemize}
+\item {\tt shadow} clause must appear with {\tt layout} clause.
+\item The value specified by {\it shadow-width} must be a non-negative integer.
+\item The number of {\it shadow-width} must be equal to the number of dimensions (or rank) of the arrays on the {\tt declare} directive.
+\item If an array is also distributed on {\tt nodes}, a {\it shadow-width} of {\tt shadow} clause must be same as the {\it shadow-width} of {\XMP} {\tt shadow} directive for the same dimension.
+\end{itemize}
+
+\subsubsection*{Example}
+The following are examples of the shadow clause.
+In line 2, the {\tt devices} directive defines device set {\tt d}.
+In line 3-5, the {\tt declare} directive declares that an array {\tt a} is distributed and allocated with shadow areas on the device set {\tt d}.
+In line 7--10, the {\tt kernels loop} construct divides and offloads the loop to the device set {\tt d}.
+In line 11, the {\tt reflect} directive updates the shadow areas of the distributed array {\tt a} on devices.
+%
+\begin{myfigure}
+\begin{minipage}{0.47\hsize}
+\begin{center}
+\begin{XACCFexampleL}
+integer :: a(N)
+!$acc devices d(*)
+!$acc declare create(a)
+!$acc+layout((block))
+!$acc+shadow((1:1)) on_device(d)
+...
+!$acc kernels loop layout(a(i))
+do i = 1, N
+  a(i) = i * 3
+end do
+!$acc reflect(a)
+\end{XACCFexampleL}
+\end{center}
+\end{minipage}
+%
+\begin{minipage}{0.48\hsize}
+\begin{center}
+\begin{XACCCexampleR}
+int a[N];
+#pragma acc devices d[*]
+#pragma acc declare create(a) \
+        layout([block]) \
+        shadow([1:1]) on_device(d)
+...
+#pragma acc kernels loop layout(a[i])
+for(int i = 0; i < N; i++){
+  a[i] = i * 3;
+}
+#pragma acc reflect(a)
+\end{XACCCexampleR}
+\end{center}
+\end{minipage}
+\caption{Code example in {\XACC} {\bf shadow} clause}\label{code:shadow_clause}
+\end{myfigure}
 
 
 \section{Communication on Accelerators}
