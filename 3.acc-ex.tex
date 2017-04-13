@@ -147,8 +147,103 @@ Assume that {\tt d} is the name of a device array.
 
 
 
-\section{Data Mapping Clauses}
+\section{Data and Work Mapping Clauses}
 \subsection{layout Clause}
+\subsection*{Synopsis}
+The {\tt layout} clause specifies data or work mapping on devices.
+
+\subsubsection*{Syntax}
+\vspace{1em}
+In {\tt declare} directive:
+\vspace{1em}
+
+\begin{tabular}{ll}
+  \verb![F]! & \verb|layout( (| {\it dist-format} {\openb}, {\it dist-format} {\closeb} ... \verb|) )|\\
+  \verb![C]! & \verb|layout( [| {\it dist-format} \verb|]| {\openb} \verb|[| {\it dist-format} \verb|]| {\closeb} ... \verb|)|
+\end{tabular}
+
+\vspace{1em}
+where {\it dist-format} must be one of:
+\vspace{1em}
+
+\begin{tabular}{ll}
+ \hspace{0.5cm} & {\tt *} \\
+                & {\tt block}
+\end{tabular}
+
+\vspace{1em}
+In {\tt loop}, {\tt parallel loop}, and {\tt kernels loop} construct:
+\vspace{1em}
+
+\begin{tabular}{ll}
+  \verb![F]! & \verb|layout(| {\it array-name} \verb|(| {\it layout-subscript} {\openb}, {\it layout-subscript} {\closeb} ... \verb|) )|\\
+  \verb![C]! & \verb|layout(| {\it array-name} \verb|[| {\it layout-subscript} \verb|]| {\openb} \verb|[| {\it layout-subscript} \verb|]| {\closeb} ... \verb|)|
+\end{tabular}
+
+\vspace{1em}
+where {\it layout-subscript} must be one of:
+\vspace{1em}
+
+\begin{tabular}{ll}
+ \hspace{0.5cm} & {\it scalar-int-variable} {\openb} \{ {\tt +} $\vert$ {\tt -} \} {\it int-expr} {\closeb}\\
+                & {\tt *}
+\end{tabular}
+
+
+\subsubsection*{Description}
+The {\tt layout} clause may appear on {\tt declare} directives and on {\tt loop}, {\tt parallel loop}, and {\tt kernels loop} constructs.
+If the {\tt layout} clause appears on a {\tt declare} directive, it specifies the data mapping to the device set for arrays which are appeared in data clauses on the directive.
+``{\tt *}'' represents that the dimension is not distributed, and {\tt block} represents that the dimension is divided into contiguous blocks, which are distributed onto the device array.
+
+If the {\tt layout} clause appears on a {\tt loop}, {\tt parallel loop}, or {\tt kernels loop} directive, it specifies the mapping for the immediately following loop.
+If {\it loop-index} appears in {\it layout-subscript}, the loop is distributed to the device set as same manner as the dimension where the {\it loop-index} appears.
+If there is no {\tt on\_device} clause on the construct, it is assumed that the device set on which the array is distributed is specified by {\tt on\_device} clause.
+
+\subsubsection*{Restriction}
+\begin{itemize}
+\item {\it loop-index} must be a control variable of a loop. % in the associated loop nest.
+\end{itemize}
+
+\subsubsection*{Example}
+The following are examples of the layout clause.
+In line 2, the {\tt devices} directive defines device set {\tt d}.
+In line 3, the {\tt declare} directive declares that an array {\tt a} is distributed and allocated on the device set {\tt d}.
+In line 6--9, the {\tt kernels loop} directive distributes the loop and offloads the loops to the device set {\tt d}.
+%
+\begin{myfigure}
+\begin{minipage}{0.47\hsize}
+\begin{center}
+\begin{XACCFexampleL}
+integer :: a(N)
+!$acc devices d(*)
+!$acc declare create(a)
+!$acc+layout((block)) on_device(d)
+...
+!$acc kernels loop layout(a(i))
+do i = 1, N
+  a(i) = i * 2
+end do
+\end{XACCFexampleL}
+\end{center}
+\end{minipage}
+%
+\begin{minipage}{0.48\hsize}
+\begin{center}
+\begin{XACCCexampleR}
+int a[N];
+#pragma acc devices d[*]
+#pragma acc declare create(a) \
+        layout([block]) on_device(d)
+...
+#pragma acc kernels loop layout(a[i])
+for(int i = 0; i < N; i++){
+  a[i] = i * 2;
+}
+\end{XACCCexampleR}
+\end{center}
+\end{minipage}
+\caption{Code example in {\XACC} {\bf layout} clause}\label{code:layout_clause}
+\end{myfigure}
 
 \subsection{shadow Clause}
 
