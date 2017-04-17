@@ -92,6 +92,15 @@ The following are examples of the devices declaration. The device array {\tt d} 
 \end{myfigure}
 
 
+\subsubsection{Default Device Set}
+\subsection*{Synopsis}
+The default device set is the device set which some directives target normally.
+
+\subsection*{Description}
+The default device set is the device set which contains the all {\OACC} default devices on the node.
+The device type of each device of the set equals to {\tt acc\_device\_default}, and the size of the set equals to a result of {\tt acc\_get\_num\_devices(acc\_device\_default)}.
+%In {\tt declare} directive with {\tt layout} clause or {\tt barrier_device} directives, it is assumed that the default device set is specified for {\tt on_device} clause.
+
 
 \subsubsection{Device Reference}
 \subsection*{Synopsis}
