@@ -4,3 +4,5 @@
 *.dvi
 *.ilg
 *.ind
+*.aux
+*.toc
