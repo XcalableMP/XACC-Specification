@@ -1,6 +1,6 @@
 \chapter{{\OACC} Extensions}\label{chap:acc-ex}
 This chapter defines an extension of {\OACC} in {\XACC}.
-The extension can represent offload works to multiple-accelerators on each {\tt node}.
+The extension can represent offload works to multiple-accelerators on each {\bf node}.
 
 \section{Device Set Definition and Reference}
 \subsection{devices Directive}
@@ -47,7 +47,7 @@ and {\it predefined-devices-ref} is one of:
 \end{tabular}
 
 \subsubsection*{Description}
-The {\bf device} directive declares a device array that corresponds to a device set.
+The {\tt device} directive declares a device array that corresponds to a device set.
 
 The first and third forms are used to declare a device array that corresponds to the entire device set.
 The second and fourth forms are used to declare a device array, each device of which is
@@ -64,11 +64,11 @@ assigned to a device of the device set is specified by {\it predefined-devices-r
       the same scoping unit.
  %% \item When the {\bf acc} clause is specified,
  %%   the arrays specified by the sequence of {\it array-name}'s must be allocated on accelerator memory.
- \item This construct must not appear in {\OACC} {\tt compute region}.
+ \item This construct must not appear in {\OACC} {\bf compute region}.
 \end{itemize}
 
 \subsubsection*{Example}
-The following are examples of the devices declaration. The device array {\tt d} corresponds to the entire default device set and the device array {\tt e} is a subset of the predefined device array {\tt nvidia}. The program must be executed by a node which has four or more NVIDIA accelerator devices.
+The following are examples of the devices declaration. The device array {\it d} corresponds to the entire default device set and the device array {\it e} is a subset of the predefined device array {\it nvidia}. The program must be executed by a node which has four or more NVIDIA accelerator devices.
 %
 \begin{myfigure}
 \begin{minipage}{0.45\hsize}
@@ -88,7 +88,7 @@ The following are examples of the devices declaration. The device array {\tt d} 
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Code example in {\XACC} {\bf devices} directive}\label{code:devices}
+\caption{Code example in {\XACC} {\tt devices} directive}\label{code:devices}
 \end{myfigure}
 
 
@@ -98,7 +98,7 @@ The default device set is the device set which some directives target normally.
 
 \subsection*{Description}
 The default device set is the device set which contains the all {\OACC} default devices on the node.
-The device type of each device of the set equals to {\tt acc\_device\_default}, and the size of the set equals to a result of {\tt acc\_get\_num\_devices(acc\_device\_default)}.
+The device type of each device of the set equals to {\it acc\_device\_default}, and the size of the set equals to a result of {\it acc\_get\_num\_devices(acc\_device\_default)}.
 %In {\tt declare} directive with {\tt layout} clause or {\tt barrier_device} directives, it is assumed that the default device set is specified for {\tt on_device} clause.
 
 
@@ -126,7 +126,7 @@ A device reference by {\it devices-name} represents a device set corresponding t
 %% A device reference by ``*'' represents the executing device set.
 
 \subsubsection*{Example}
-Assume that {\tt d} is the name of a device array.
+Assume that {\it d} is the name of a device array.
 \begin{itemize}
 \item To specify a device set to which the declared device array corresponds,\\
 
@@ -234,9 +234,9 @@ If there is no {\tt on\_device} clause on the construct, it is assumed that the 
 
 \subsubsection*{Example}
 The following are examples of the layout clause.
-In line 2, the {\tt devices} directive defines device set {\tt d}.
-In line 3-4, the {\tt declare} directive declares that an array {\tt a} is distributed and allocated on the device set {\tt d}.
-In line 6--9, the {\tt kernels loop} directive distributes the loop and offloads the loops to the device set {\tt d}.
+In line 2, the {\tt devices} directive defines device set {\it d}.
+In line 3-4, the {\tt declare} directive declares that an array {\it a} is distributed and allocated on the device set {\it d}.
+In line 6--9, the {\tt kernels loop} directive distributes the loop and offloads the loops to the device set {\it d}.
 %
 \begin{myfigure}
 \begin{minipage}{0.47\hsize}
@@ -270,7 +270,7 @@ for(int i = 0; i < N; i++){
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Code example in {\XACC} {\bf layout} clause}\label{code:layout_clause}
+\caption{Code example in {\XACC} {\tt layout} clause}\label{code:layout_clause}
 \end{myfigure}
 
 
@@ -313,15 +313,15 @@ bounds in the dimension.
 \item {\tt shadow} clause must appear with {\tt layout} clause.
 \item The value specified by {\it shadow-width} must be a non-negative integer.
 \item The number of {\it shadow-width} must be equal to the number of dimensions (or rank) of the arrays on the {\tt declare} directive.
-\item If an array is also distributed on {\tt nodes}, a {\it shadow-width} of {\tt shadow} clause must be same as the {\it shadow-width} of {\XMP} {\tt shadow} directive for the same dimension.
+\item If an array is also distributed on {\bf nodes}, a {\it shadow-width} of {\tt shadow} clause must be same as the {\it shadow-width} of {\XMP} {\tt shadow} directive for the same dimension.
 \end{itemize}
 
 \subsubsection*{Example}
 The following are examples of the shadow clause.
-In line 2, the {\tt devices} directive defines device set {\tt d}.
-In line 3-5, the {\tt declare} directive declares that an array {\tt a} is distributed and allocated with shadow areas on the device set {\tt d}.
-In line 7--10, the {\tt kernels loop} construct divides and offloads the loop to the device set {\tt d}.
-In line 11, the {\tt reflect} directive updates the shadow areas of the distributed array {\tt a} on devices.
+In line 2, the {\tt devices} directive defines device set {\it d}.
+In line 3-5, the {\tt declare} directive declares that an array {\it a} is distributed and allocated with shadow areas on the device set {\it d}.
+In line 7--10, the {\tt kernels loop} construct divides and offloads the loop to the device set {\it d}.
+In line 11, the {\tt reflect} directive updates the shadow areas of the distributed array {\it a} on devices.
 %
 \begin{myfigure}
 \begin{minipage}{0.47\hsize}
@@ -359,7 +359,7 @@ for(int i = 0; i < N; i++){
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Code example in {\XACC} {\bf shadow} clause}\label{code:shadow_clause}
+\caption{Code example in {\XACC} {\tt shadow} clause}\label{code:shadow_clause}
 \end{myfigure}
 
 
@@ -381,14 +381,14 @@ If no {\tt on\_device} clause is specified, then it is assumed that the default 
 
 \subsubsection*{Restriction}
 \begin{itemize}
-\item This construct must not appear in {\OACC} {\tt compute region}.
+\item This construct must not appear in {\OACC} {\bf compute region}.
 \end{itemize}
 
 \subsubsection*{Example}
 The following are examples of the barrier\_devices construct.
-In line 1--2, the {\tt devices} directives define device set {\tt d} and {\tt e}.
+In line 1--2, the {\tt devices} directives define device set {\it d} and {\it e}.
 In line 4--5, the first {\tt barrier\_device} construct performs a barrier operation for all devices, 
-and the second one performs a barrier operation for devices in the device set {\tt e}.
+and the second one performs a barrier operation for devices in the device set {\it e}.
 %
 \begin{myfigure}
 \begin{minipage}{0.45\hsize}
@@ -414,5 +414,5 @@ and the second one performs a barrier operation for devices in the device set {\
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Code example in {\XACC} {\bf barrier\_device} construct}\label{code:barrier_device}
+\caption{Code example in {\XACC} {\tt barrier\_device} construct}\label{code:barrier_device}
 \end{myfigure}

@@ -69,7 +69,7 @@ By contrast,
 {\XACC} directives can represent such communication among accelerators directly using global indices.
 
 \subsection{{\OACC} Extensions}
-The {\OACC} extension can represent offloading works and data to multiple-accelerators on a {\tt node}.
+The {\OACC} extension can represent offloading works and data to multiple-accelerators on a {\bf node}.
 Fig. \ref{fig:concept_acc_ex} shows a concept of the {\OACC} extension.
 
 \begin{myfigure}
@@ -77,11 +77,11 @@ Fig. \ref{fig:concept_acc_ex} shows a concept of the {\OACC} extension.
   \caption{Concept of {\OACC} Extension}\label{fig:concept_acc_ex}
 \end{myfigure}
 
-{\OACC} extened directive defines a {\tt device set}.
-The {\tt device set} represents a set of devices on a {\tt node}.
-Futher, {\OACC} extended directives declare {\tt distributed arrays} on the {\tt device set} while maintaining the arrays on the host memory, and the directives distribute offloading loop statement and memory copy between host and device memories for the {\tt distributed-arrays}.
-Moreover, {\OACC} extended directives synchronizes devices among the {\tt device set}.
-{\XACC} directives also transfer data between device memories on the {\tt node}.
+{\OACC} extened directive defines a {\bf device set}.
+The {\bf device set} represents a set of devices on a {\bf node}.
+Futher, {\OACC} extended directives declare {\bf distributed arrays} on the {\bf device set} while maintaining the arrays on the host memory, and the directives distribute offloading loop statement and memory copy between host and device memories for the {\bf distributed-arrays}.
+Moreover, {\OACC} extended directives synchronizes devices among the {\bf device set}.
+{\XACC} directives also transfer data between device memories on the {\bf node}.
 
 \section{Execution Model}
 The execution model of {\XACC} is a combination of those of {\XMP} and {\OACC}.
