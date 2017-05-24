@@ -49,7 +49,7 @@ and {\it predefined-devices-ref} is one of:
 \subsubsection*{Description}
 The {\tt device} directive declares a device array that corresponds to a device set.
 
-The first and third forms are used to declare a device array that corresponds to the entire device set.
+The first and third forms are used to declare a device array that corresponds to a set of the entire default devices.
 The second and fourth forms are used to declare a device array, each device of which is
 assigned to a device of the device set is specified by {\it predefined-devices-ref} at the corresponding position.
 
@@ -68,7 +68,7 @@ assigned to a device of the device set is specified by {\it predefined-devices-r
 \end{itemize}
 
 \subsubsection*{Example}
-The following are examples of the devices declaration. The device array {\it d} corresponds to the entire default device set and the device array {\it e} is a subset of the predefined device array {\it nvidia}. The program must be executed by a node which has four or more NVIDIA accelerator devices.
+The following are examples of the devices declaration. The device array {\it d} corresponds to a set of entire default devices and the device array {\it e} is a subset of the predefined device array {\it nvidia}. The program must be executed by a node which has four or more NVIDIA accelerator devices.
 %
 \begin{myfigure}
 \begin{minipage}{0.45\hsize}
