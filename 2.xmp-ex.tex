@@ -78,6 +78,9 @@ on accelerators in parallel.
 For ease of writing,
 the order of {\XMP} {\tt loop} directive and {\OACC} {\tt loop} directive does not matter.
 
+When {\tt acc} clause appears in {\XMP} loop directive with {\tt reduction} clause,
+the directive performs a reduction operation for a variable specified in the {\tt reduction} clause on accelerator memory.
+
 \subsubsection*{Restriction}
 \begin{itemize}
 \item In {\OACC} {\bf compute region},
@@ -181,7 +184,7 @@ Moreover,
 in lines 7-8,
 the {\tt parallel} directive and {\XMP} {\tt loop} directive perform the next loop statement on accelerators in {\bf nodes} in parallel.
 When finishing the calculation of the loop statement,
-OpenACC {\tt reduction} clause and {\XMP} {\tt reduction} clause perform a reduction operation for the variable {\bf sum} on accelerators in {\bf nodes}.
+OpenACC {\tt reduction} clause and {\XMP} {\tt reduction} and {\tt acc} clauses in lines 7-8 perform a reduction operation for the variable {\bf sum} on accelerators in {\bf nodes}.
 
 \section{Communication on Accelerated Clusters}
 \subsection{{\XACC} Directives}
