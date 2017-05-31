@@ -498,9 +498,9 @@ at the point at which the construct appears.
 \subsubsection*{Description}
 \begin{itemize}
  \item When the {\tt acc} clause is specified,
-the barrier construct blocks until all outgoing asynchronous operations on accelerators are completed.
+the barrier construct blocks until all ongoing asynchronous operations on accelerators are completed.
  \item When the {\tt acc} clause is not specified,
-the barrier construct does not guarantee that an outgoing asynchronous operation on accelerator is completed.
+the barrier construct does not guarantee that an ongoing asynchronous operation on accelerator is completed.
 \end{itemize}
 
 \subsubsection*{Example}
