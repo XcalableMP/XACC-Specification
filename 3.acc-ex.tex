@@ -131,7 +131,7 @@ Assume that {\it d} is the name of a device array.
 \item To specify a device set to which the declared device array corresponds,\\
 
 \begin{myfigure}
-\begin{minipage}{0.40\hsize}
+\begin{minipage}{0.43\hsize}
 \begin{center}
 \begin{XACCFexampleL}
 !$acc devices e(1) = d(1)
@@ -140,18 +140,36 @@ Assume that {\it d} is the name of a device array.
 \end{center}
 \end{minipage}
 %
-\begin{minipage}{0.45\hsize}
+\begin{minipage}{0.51\hsize}
 \begin{center}
 \begin{XACCCexampleR}
 #pragma acc devices e[1] = d[0]
-#pragma acc devices f[1] = d[1:3]
+#pragma acc devices f[3] = d[1:3]
 \end{XACCCexampleR}
 \end{center}
 \end{minipage}
-\caption{Code example in {\XACC} device reference}\label{code:device_ref}
+%\caption{Code example in {\XACC} device reference}\label{code:device_ref}
 \end{myfigure}
 
-\item ...
+\item To specify a device array that corresponds to the executing device array set in the {\tt barrier} directive.
+
+\begin{myfigure}
+\begin{minipage}{0.43\hsize}
+\begin{center}
+\begin{XACCFexampleL}
+!$acc barrier_device on_device(d)
+\end{XACCFexampleL}
+\end{center}
+\end{minipage}
+%
+\begin{minipage}{0.51\hsize}
+\begin{center}
+\begin{XACCCexampleR}
+#pragma acc barrier_device on_device(d)
+\end{XACCCexampleR}
+\end{center}
+\end{minipage}
+\end{myfigure}
 
 \end{itemize}
 
