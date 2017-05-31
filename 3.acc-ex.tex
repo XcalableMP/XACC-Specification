@@ -393,7 +393,7 @@ The {\tt barrier\_device} construct specifies an explicit barrier among devices 
 \end{tabular}
 
 \subsubsection*{Description}
-The barrier\_device construct blocks accelerator devices until all outgoing asynchronous operations on them are completed regardless of the host operations.
+The barrier\_device construct blocks accelerator devices until all ongoing asynchronous operations on them are completed regardless of the host operations.
 The construct is performed among the device set specified by the {\tt on\_device} clause.
 If no {\tt on\_device} clause is specified, then it is assumed that the default device set is specified in it.
 
