@@ -186,7 +186,8 @@ The {\tt on\_device} clause specifies a execution device set for the directive.
 The {\tt on\_device} clause may appear on {\tt parallel}, {\tt parallel loop}, {\tt kernels}, {\tt kernels loop}, {\tt data}, {\tt enter data}, {\tt exit data}, {\tt declare}, {\tt update}, {\tt wait}, and {\tt barrier\_device} directives.
 
 The {\tt on\_device} clause specifies a device set which the directive targets.
-The directive is redundantly applied to each device of the device set unless specifiying data or work mapping by {\tt layout} clause.
+The directive is applied to each device of the device set in parallel.
+If there is no {\tt layout} clause, the all devices process the directive for same data or work redundantly.
 
 If no {\tt on\_device} clause appears on a {\tt declare} directive with a {\tt layout} clause, it is assumed that the default device set is specified by {\tt on\_device} clause.
 If no {\tt on\_device} clause appears on a {\tt barrier\_device} directive, it is assumed that the default device set is specified by {\tt on\_device} clause.
