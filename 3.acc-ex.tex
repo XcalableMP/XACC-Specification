@@ -242,7 +242,7 @@ If the {\tt layout} clause appears on a {\tt declare} directive, it specifies th
 ``{\tt *}'' represents that the dimension is not distributed, and {\tt block} represents that the dimension is divided into contiguous blocks, which are distributed onto the device array.
 
 If the {\tt layout} clause appears on a {\tt loop}, {\tt parallel loop}, or {\tt kernels loop} directive, it specifies the mapping for the immediately following loop.
-If {\it loop-index} appears in {\it layout-subscript}, the loop is distributed to the device set as same manner as the dimension where the {\it loop-index} appears.
+If {\it loop-index} appears in {\it layout-subscript}, the loop is distributed to the device set in the same manner as the dimension where the {\it loop-index} appears.
 If there is no {\tt on\_device} clause on the construct, it is assumed that the device set on which the array is distributed is specified by {\tt on\_device} clause.
 
 \subsubsection*{Restriction}
@@ -381,7 +381,7 @@ for(int i = 0; i < N; i++){
 \end{myfigure}
 
 
-\section{Communication on Accelerators}
+\section{Synchronization on Accelerators}
 \subsection{barrier\_device Construct}
 \subsection*{Synopsis}
 The {\tt barrier\_device} construct specifies an explicit barrier among devices at the point which the construct appears.
