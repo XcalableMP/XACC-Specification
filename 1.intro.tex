@@ -77,11 +77,13 @@ Fig. \ref{fig:concept_acc_ex} shows a concept of the {\OACC} extension.
   \caption{Concept of {\OACC} Extension}\label{fig:concept_acc_ex}
 \end{myfigure}
 
-{\OACC} extension directive defines a {\bf device set}.
-The {\bf device set} represents a set of devices on a {\bf node}.
-Futher, {\OACC} extension directives declare {\bf distributed arrays} on the {\bf device set} while maintaining the arrays on the host memory, and the directives distribute offloading loop statement and memory copy between host and device memories for the {\bf distributed-arrays}.
-Moreover, {\OACC} extension directives synchronizes devices among the {\bf device set}.
-{\XACC} directives also transfer data between device memories on the {\bf node}.
+\begin{itemize}
+\item A {\bf device set} is a set of accelerator devices on a {\bf node}. {\OACC} directives can be applied to a {\bf device set}.
+\item A {\bf distributed-array} is an array distributed on a {\bf device set}. You can offload and distribute arrays on host to {\bf device set}.
+Moreover, the extension directives can offload works and copy memory between host and {\bf device set} for the {\bf distributed-arrays}.
+\item The extension directives can synchronize devices in a {\bf device set}.
+\item {\XACC} directives also transfer data between device memories on the {\bf node}.
+\end{itemize}
 
 \section{Execution Model}
 The execution model of {\XACC} is a combination of those of {\XMP} and {\OACC}.
