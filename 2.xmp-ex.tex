@@ -670,9 +670,10 @@ When the {\tt acc} clause is specified,
 the values of the variables specified by the sequence of {\it variable}'s on accelerator memory
 (called {\bf broadcast variables}) are broadcasted from the {\bf node} specified by the {\tt from} clause (called the {\bf source node}) 
 to each of the {\bf nodes} in the {\bf node set} specified by the {\tt on} clause.
-Moreover, the {\tt from\_device} clause specifies the device which has broadcast variables.
+Moreover, the {\tt from\_device} clause specifies a device which has {\bf broadcast variables}.
 Generally, the {\tt from\_device} clause is used when a {\bf devices} directive is used which is described in Section \ref{sec:devices}.
-If there is no {\tt from\_device} clause, it is assumed that the default device set is specified by {\tt on\_device} clause.
+If there is no {\tt from\_device} clause, it is assumed that the default device is specified.
+After executing this construct,
 the values of the {\bf broadcast variables} become the same as those in the {\bf source node}.
 
 
@@ -727,7 +728,7 @@ integer :: a
 !$acc devices d(*)
 ...
 !$acc enter data copyin(a) on_device(d)
-!$xmp bcast(a) from_device(d(1)) from p(2) acc
+!$xmp bcast(a) from_device d(1) from p(2) acc
 \end{XACCFexampleL}
 \end{center}
 \begin{center}
@@ -737,7 +738,7 @@ int a;
 #pragma acc devices d[*]
 ...
 #pragma acc enter data copyin(a) on_device(d)
-#pragma xmp bcast(a) from_device(d[0]) from p[1] acc
+#pragma xmp bcast(a) from_device d[0] from p[1] acc
 \end{XACCCexampleL}
 \end{center}
 \caption{Code example in {\tt bcast} construct with {\tt from\_device} clause}\label{code:bcast2}
@@ -751,7 +752,7 @@ In line 5,
 the {\tt enter data} directive with {\tt on\_device} clause transfers the local variable {\it a} from host memory to all accelerator memories.
 Note that the {\tt on\_device} clause is described in Section \ref{sec:ondevice}.
 In line 6,
-the {\tt bcast} directive broadcasts the variable {\it a} stored on accelerator memory on d(1) of p(2) to all accelerator memories of all {\it nodes}.
+the {\tt bcast} directive broadcasts the variable {\it a} stored on accelerator memory on {\it d(1)} of {\it p(2)} to all accelerator memories of all {\it nodes}.
 
 \subsubsection{wait\_async Construct}\label{sec:waitasync}
 \subsubsection*{Synopsis}
