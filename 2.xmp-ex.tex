@@ -869,7 +869,7 @@ int a[N]:[*];
 int b[N];
 #pragma acc declare create(a, b)
 ...
-if(xmp_node_num() == 1){
+if(xmpc_this_image() == 1){
 #pragma acc host_data use_device(a, b)
   a[:]:[2] = b[:];
 
@@ -887,11 +887,11 @@ xmp_sync_all(NULL);
 In line 3 of Fig. \ref{code:coarray},
 the {\tt declare} directive declares a {\bf coarray} {\it a} and an array {\it b} on accelerator memory.
 In lines 6-7,
-{\bf node} 1 performs put operation, where
-the whole array {\it b} on accelerator memory in {\bf node} 1 is transferred to the {\bf coarray} {\it a} on accelerator memory in {\bf node} 2.
+{\bf image} 1 performs put operation, where
+the whole array {\it b} on accelerator memory in {\bf image} 1 is transferred to the {\bf coarray} {\it a} on accelerator memory in {\bf image} 2.
 In lines 9-10,
-{\bf node} 1 performs get operation, where
-the whole {\bf coarray} {\it a} on accelerator memory in {\bf node} 3 is transferred to the array {\it b} on host memory in {\bf node} 1.
+{\bf image} 1 performs get operation, where
+the whole {\bf coarray} {\it a} on accelerator memory in {\bf image} 3 is transferred to the array {\it b} on host memory in {\bf image} 1.
 In line 13,
-the {\tt sync all} statement in {\XACCF} or the {\tt xmp\_sync\_all} function in {\XACCC} synchronizes all {\bf nodes} and guarantees completion of ongoing coarray operations.
+the {\tt sync all} statement in {\XACCF} or the {\tt xmp\_sync\_all} function in {\XACCC} synchronizes all {\bf images} and guarantees completion of ongoing coarray operations.
 
